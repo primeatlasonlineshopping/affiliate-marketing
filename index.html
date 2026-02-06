@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PrimeAtlas India - Live Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- PREMIUM THEME SETUP --- */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --highlight: #ff00cc;
+            --text-main: #ffffff;
+            --text-muted: #cfcfcf;
+            --card-radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* --- UI COMPONENTS --- */
+        .glass-card {
+            background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border); border-radius: var(--card-radius);
+            padding: 15px; margin-bottom: 15px; animation: fadeIn 0.6s ease;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border: none; color: white; padding: 10px 20px; border-radius: 30px;
+            cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase;
+        }
+        /* Edit/Delete Button Styles */
+        .btn-del { background: #ff416c; width: auto; padding: 5px 10px; font-size: 0.7rem; margin-top: 5px; border:none; color:white; border-radius:5px; cursor: pointer;}
+        .btn-edit { background: orange; width: auto; padding: 5px 10px; font-size: 0.7rem; margin-top: 5px; border:none; color:white; border-radius:5px; margin-right: 5px; cursor: pointer;}
+        
+        /* --- HEADER --- */
+        header {
+            padding: 15px 20px; position: sticky; top: 0; z-index: 1000;
+            background: rgba(15, 12, 41, 0.95); border-bottom: 1px solid var(--glass-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.4rem; font-weight: 800; background: linear-gradient(to right, #00d2ff, #3a7bd5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .header-icons { display: flex; gap: 20px; align-items: center; }
+        .cart-icon-wrap { position: relative; cursor: pointer; }
+        .cart-badge { position: absolute; top: -8px; right: -8px; background: var(--highlight); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* --- SEARCH --- */
+        .search-box { position: relative; margin: 15px; }
+        .search-box input {
+            width: 100%; background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border);
+            padding: 12px 40px 12px 15px; border-radius: 25px; color: white; outline: none;
+        }
+        .search-box i { position: absolute; right: 15px; top: 13px; color: var(--text-muted); }
+
+        /* --- HORIZONTAL SCROLL --- */
+        .h-scroll {
+            display: flex; overflow-x: auto; gap: 15px; padding: 10px 15px;
+            scrollbar-width: none;
+        }
+        .h-scroll::-webkit-scrollbar { display: none; }
+        
+        .circle-item {
+            min-width: 75px; display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; transition: transform 0.2s; position: relative;
+        }
+        .circle-item:active { transform: scale(0.9); }
+        .circle-img {
+            width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
+            border: 2px solid var(--glass-border); padding: 2px; background: white;
+            transition: 0.3s;
+        }
+        .circle-text { font-size: 0.75rem; margin-top: 5px; text-align: center; color: var(--text-muted); line-height: 1.2; }
+        
+        .active-filter .circle-img { border-color: var(--highlight); box-shadow: 0 0 10px var(--highlight); transform: scale(1.1); }
+        .active-filter .circle-text { color: var(--highlight); font-weight: bold; }
+
+        /* --- PRODUCT GRID --- */
+        .section-title { margin: 20px 15px 10px; font-size: 1.1rem; border-left: 4px solid var(--primary); padding-left: 10px; color: var(--text-main); display: flex; justify-content: space-between; align-items: center;}
+        .clear-filter { font-size: 0.7rem; color: var(--highlight); cursor: pointer; border: 1px solid var(--highlight); padding: 2px 8px; border-radius: 10px; display: none; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
+        .product-card {
+            background: var(--glass-bg); border-radius: 15px; overflow: hidden;
+            border: 1px solid var(--glass-border); position: relative; animation: popIn 0.5s ease;
+        }
+        
+        .prod-img { width: 100%; height: 140px; object-fit: contain; background: #fff; }
+        
+        .prod-details { padding: 10px; }
+        .prod-name { font-size: 0.85rem; height: 2.4em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 5px; }
+        .price-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .new-price { color: #00ff88; font-weight: bold; font-size: 0.95rem; }
+        .old-price { text-decoration: line-through; color: #ff416c; font-size: 0.75rem; }
+        .platform-tag { 
+            font-size: 0.65rem; background: var(--secondary); padding: 2px 6px; 
+            border-radius: 4px; position: absolute; top: 8px; left: 8px; z-index: 2; 
+        }
+        .buy-btn-small { 
+            display: block; text-align: center; background: white; color: black; 
+            text-decoration: none; font-size: 0.8rem; padding: 6px; border-radius: 5px; font-weight: bold; cursor: pointer;
+        }
+
+        .cart-btn-overlay {
+            position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6); 
+            color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; cursor: pointer; z-index: 5;
+            transition: 0.3s;
+        }
+        .cart-btn-overlay.added { background: #00ff88; color: black; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: #1a1a2e;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid var(--glass-border); z-index: 999;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .nav-item { text-align: center; color: var(--text-muted); transition: 0.3s; flex: 1; }
+        .nav-item.active { color: var(--primary); transform: translateY(-3px); }
+        .nav-item i { font-size: 1.3rem; margin-bottom: 3px; }
+        .nav-item span { font-size: 0.7rem; }
+
+        /* --- MODALS (Admin & Product View) --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: #24243e; width: 95%; max-width: 450px; padding: 20px; border-radius: 20px; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto; position: relative; }
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; margin-bottom: 5px; color: var(--primary); font-size: 0.85rem; }
+        .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid #444; color: white; border-radius: 8px; }
+        .input-group textarea { height: 80px; resize: none; font-size: 0.8rem; }
+        
+        .add-fab { position: fixed; bottom: 85px; right: 20px; background: var(--primary); width: 50px; height: 50px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 0 15px var(--primary); z-index: 999; cursor: pointer; }
+
+        /* --- PRODUCT VIEW (CAROUSEL) STYLES --- */
+        .carousel-container { position: relative; width: 100%; height: 300px; background: #fff; border-radius: 10px; overflow: hidden; margin-bottom: 15px; }
+        .carousel-slide { width: 100%; height: 100%; object-fit: contain; display: none; }
+        .carousel-slide.active { display: block; }
+        .c-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 10px; cursor: pointer; z-index: 10; font-size: 1.2rem; }
+        .c-prev { left: 0; }
+        .c-next { right: 0; }
+        .video-wrapper { margin-top: 15px; border-radius: 10px; overflow: hidden; border: 1px solid var(--glass-border); }
+        .video-wrapper iframe, .video-wrapper video { width: 100%; height: 200px; }
+        .thumb-row { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 15px; }
+        .thumb-img { width: 50px; height: 50px; border-radius: 5px; border: 2px solid transparent; object-fit: cover; cursor: pointer; }
+        .thumb-img.active { border-color: var(--primary); }
+
+        .page-section { display: none; }
+        .active-page { display: block; }
+        .no-data { text-align: center; padding: 20px; color: gray; font-size: 0.9rem; width: 100%; grid-column: span 2; }
+
+        /* CART ROW STYLE */
+        .cart-row { display: flex; gap: 10px; background: rgba(255,255,255,0.05); margin-bottom: 10px; padding: 10px; border-radius: 10px; align-items: center; }
+        .cart-img { width: 50px; height: 50px; object-fit: contain; background: white; border-radius: 5px; }
+        .cart-info { flex: 1; }
+        .cart-actions { display: flex; gap: 10px; align-items: center; }
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fas fa-shopping-bag"></i> PrimeAtlas</div>
+        <div class="header-icons">
+            <div class="cart-icon-wrap" onclick="window.openCartModal()">
+                <i class="fas fa-shopping-cart" style="font-size: 1.2rem; color:white;"></i>
+                <div id="cart-badge" class="cart-badge" style="display:none;">0</div>
+            </div>
+            <div onclick="window.toggleAdminLogin()" style="cursor: pointer; opacity: 0.7;"><i class="fas fa-user-cog"></i></div>
+        </div>
+    </header>
+
+    <div id="fab" class="add-fab" onclick="window.openAddModal()"><i class="fas fa-plus"></i></div>
+
+    <main>
+        <section id="home-page" class="page-section active-page">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search products..." onkeyup="window.handleSearch()">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div id="contact-area" style="display:flex; justify-content:center; gap:15px; margin:15px 10px;"></div>
+            <div id="contact-edit-btn" style="text-align:center; display:none; margin-bottom:15px;">
+                <button class="btn-del" style="background:orange; padding:8px 15px; font-size:0.9rem;" onclick="window.openEditContactModal()">
+                    <i class="fas fa-edit"></i> Edit Contact Info
+                </button>
+            </div>
+
+            <h3 class="section-title">Platforms</h3>
+            <div class="h-scroll" id="platform-list"></div>
+            
+            <h3 class="section-title">Categories</h3>
+            <div class="h-scroll" id="type-cat-list"></div>
+
+            <h3 class="section-title">
+                <span id="grid-title">All Products</span>
+                <span id="clear-filters" class="clear-filter" onclick="window.clearAllFilters()">Clear All</span>
+            </h3>
+            <div class="grid" id="main-product-grid"></div>
+        </section>
+
+        <section id="top-cat-page" class="page-section">
+            <h2 style="text-align:center; margin:20px 0;">Top Collections</h2>
+            <div id="top-cat-container" style="padding:0 15px;"></div>
+        </section>
+
+        <section id="under-cat-page" class="page-section">
+            <h2 style="text-align:center; margin:20px 0;">Budget Store</h2>
+            <div id="under-cat-container" style="padding:0 15px;"></div>
+        </section>
+
+        <section id="platform-page" class="page-section">
+            <h2 style="text-align:center; margin:20px 0;">Top Platforms</h2>
+            <div id="top-platform-grid" class="grid"></div>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="window.switchPage('home-page', this)">
+            <i class="fas fa-home"></i> <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="window.switchPage('top-cat-page', this)">
+            <i class="fas fa-crown"></i> <span>Collections</span>
+        </div>
+        <div class="nav-item" onclick="window.switchPage('under-cat-page', this)">
+            <i class="fas fa-tags"></i> <span>Under Store</span>
+        </div>
+        <div class="nav-item" onclick="window.switchPage('platform-page', this)">
+            <i class="fas fa-store"></i> <span>Platforms</span>
+        </div>
+    </nav>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span onclick="window.closeModal('loginModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+            <h2 style="text-align:center; margin-bottom:20px;">Admin Login</h2>
+            <div class="input-group"><label>ID</label><input type="text" id="adminId"></div>
+            <div class="input-group"><label>Password</label><input type="password" id="adminPass"></div>
+            <button class="btn" onclick="window.verifyAdmin()">Login</button>
+        </div>
+    </div>
+
+    <div id="dataModal" class="modal">
+        <div class="modal-content">
+            <span onclick="window.closeModal('dataModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+            <h2 id="modalTitle" style="margin-bottom:15px;">Add Item</h2>
+            <div id="dynamicInputs"></div>
+            <button id="saveBtn" class="btn" onclick="window.saveData()" style="margin-top:15px;">Save to Cloud</button>
+        </div>
+    </div>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span onclick="window.closeModal('cartModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+            <h2 style="margin-bottom:15px;">My Cart <i class="fas fa-shopping-cart"></i></h2>
+            <div id="cart-items-container" style="max-height: 60vh; overflow-y: auto;"></div>
+            <div style="margin-top:15px; text-align: center; color: gray; font-size: 0.8rem;">
+                Items are saved locally.
+            </div>
+        </div>
+    </div>
+
+    <div id="viewProductModal" class="modal">
+        <div class="modal-content" style="max-height: 95vh; overflow-y: scroll;">
+            <span onclick="window.closeModal('viewProductModal')" style="position:absolute; top:10px; right:15px; font-size:1.8rem; cursor:pointer; z-index:100; color:white; background:rgba(0,0,0,0.5); padding:0 8px; border-radius:50%;">&times;</span>
+            
+            <div id="pv-carousel" class="carousel-container">
+                <button class="c-btn c-prev" onclick="window.changeSlide(-1)">&#10094;</button>
+                <div id="pv-slides"></div>
+                <button class="c-btn c-next" onclick="window.changeSlide(1)">&#10095;</button>
+            </div>
+            
+            <div id="pv-thumbs" class="thumb-row"></div>
+
+            <div style="padding: 10px 0;">
+                <span id="pv-platform" class="platform-tag" style="position:static; font-size:0.8rem;">Platform</span>
+                <h2 id="pv-name" style="margin: 10px 0;">Product Name</h2>
+                <div class="price-row" style="font-size: 1.2rem;">
+                    <span id="pv-new" class="new-price">₹0</span>
+                    <span id="pv-old" class="old-price">₹0</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <a id="pv-buy-btn" href="#" target="_blank" class="btn" style="text-decoration:none; display:block; text-align:center; flex: 2;">
+                    Buy Now <i class="fas fa-external-link-alt"></i>
+                </a>
+                <button id="pv-cart-btn" class="btn" style="flex: 1; background: var(--highlight);" onclick="">
+                    <i class="fas fa-cart-plus"></i>
+                </button>
+            </div>
+
+            <div id="pv-video" class="video-wrapper" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyDP6Lhc8334AaY5gAnU3cdvLrDRj-gXgr0",
+          authDomain: "earnkarodaily96.firebaseapp.com",
+          databaseURL: "https://earnkarodaily96-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "earnkarodaily96",
+          storageBucket: "earnkarodaily96.firebasestorage.app",
+          messagingSenderId: "338144953118",
+          appId: "1:338144953118:web:8f0398aee431dd6737bf0f"
+        };
+
+        let dbRef;
+        let isFirebaseActive = false;
+        
+        try {
+            const app = initializeApp(firebaseConfig);
+            const firestore = getFirestore(app);
+            dbRef = doc(firestore, "PrimeAtlas", "appData"); 
+            isFirebaseActive = true;
+            console.log("Firebase Connected");
+        } catch (e) {
+            console.error("Firebase Failed:", e);
+        }
+
+        let isAdmin = false;
+        
+        // NEW FILTER VARIABLES (Independent)
+        let activePlatform = 'all';
+        let activeCategory = 'all';
+        let searchQuery = '';
+
+        // USER CART DATA
+        let userCart = JSON.parse(localStorage.getItem('primeUserCart')) || [];
+
+        let isEditing = false;
+        let editingId = null;
+
+        const defaultData = {
+            contact: { insta: '', wa: '', phone: '' },
+            platforms: [ { id: 1, name: 'Amazon', image: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg' } ],
+            categories: [], topCategories: [], underCategories: [], products: [], topCatProducts: [], topPlatforms: []
+        };
+
+        let localDB = JSON.parse(JSON.stringify(defaultData));
+
+        if (isFirebaseActive) {
+            onSnapshot(dbRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    localDB = docSnap.data();
+                    // Ensure arrays exist
+                    ['products', 'topCatProducts', 'topPlatforms', 'categories', 'platforms'].forEach(k => { if(!localDB[k]) localDB[k] = []; });
+                    if(!localDB.contact) localDB.contact = defaultData.contact;
+                    renderAll();
+                } else {
+                    setDoc(dbRef, defaultData);
+                }
+            });
+        } else {
+            const stored = localStorage.getItem('PrimeAtlasDB');
+            if(stored) localDB = JSON.parse(stored);
+            renderAll();
+        }
+
+        window.saveData = async function() {
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
+
+            // --- EDIT LOGIC ---
+            if(isEditing && editingId) {
+                let list, idx;
+                if(currentAddType === 'product') list = localDB.products;
+                else if(currentAddType === 'topCatProduct') list = localDB.topCatProducts;
+                else if(currentAddType === 'topPlatform') list = localDB.topPlatforms;
+                
+                if(list) {
+                    idx = list.findIndex(x => x.id == editingId);
+                    if(idx > -1) {
+                        if(currentAddType === 'topPlatform') {
+                            list[idx].name = getVal('iName');
+                            list[idx].image = getVal('iImg');
+                            list[idx].link = getVal('iLink');
+                        } else {
+                             const galleryText = getVal('iGallery');
+                             const galleryArr = galleryText ? galleryText.split('\n').filter(url => url.trim() !== '') : [];
+                             
+                             list[idx].name = getVal('iName');
+                             list[idx].platform = getVal('iPlatform');
+                             list[idx].image = getVal('iImg');
+                             list[idx].gallery = galleryArr;
+                             list[idx].video = getVal('iVideo');
+                             list[idx].link = getVal('iLink');
+                             list[idx].newPrice = getVal('iNew');
+                             list[idx].oldPrice = getVal('iOld');
+                             
+                             if(currentAddType === 'product') list[idx].category = getVal('iCat');
+                        }
+                    }
+                }
+                isEditing = false;
+                editingId = null;
+                document.getElementById('saveBtn').innerText = "Save to Cloud";
+            } 
+            // --- ADD NEW LOGIC ---
+            else {
+                const id = Date.now();
+                if (currentAddType === 'product' || currentAddType === 'topCatProduct') {
+                    const galleryText = getVal('iGallery');
+                    const galleryArr = galleryText ? galleryText.split('\n').filter(url => url.trim() !== '') : [];
+                    
+                    const newItem = {
+                        id, 
+                        name: getVal('iName'), 
+                        platform: getVal('iPlatform'), 
+                        image: getVal('iImg'), 
+                        gallery: galleryArr,
+                        video: getVal('iVideo'),
+                        link: getVal('iLink'), 
+                        newPrice: getVal('iNew'), 
+                        oldPrice: getVal('iOld')
+                    };
+
+                    if (currentAddType === 'product') {
+                        newItem.category = getVal('iCat');
+                        localDB.products.unshift(newItem);
+                    } else {
+                        newItem.topCatId = currentParentId;
+                        localDB.topCatProducts.push(newItem);
+                    }
+                } else if (currentAddType === 'platform') {
+                    localDB.platforms.push({ id, name: getVal('iName'), image: getVal('iImg') });
+                } else if (currentAddType === 'category') {
+                    localDB.categories.push({ id, name: getVal('iName'), image: getVal('iImg') });
+                } else if (currentAddType === 'contact') {
+                    localDB.contact = { 
+                        insta: getVal('iInsta'), 
+                        wa: getVal('iWa'), 
+                        phone: getVal('iPhone') 
+                    };
+                } else if (currentAddType === 'topCategory') {
+                    localDB.topCategories.push({id, name: getVal('iName')});
+                } else if (currentAddType === 'underCategory') {
+                    localDB.underCategories.push({id, name: getVal('iName'), limit: getVal('iLimit')});
+                } else if (currentAddType === 'topPlatform') {
+                    localDB.topPlatforms.push({ id, name: getVal('iName'), image: getVal('iImg'), link: getVal('iLink') });
+                }
+            }
+
+            await saveToCloud();
+            window.closeModal('dataModal');
+        };
+
+        window.deleteItem = async function(type, id, event) {
+            if(event) event.stopPropagation();
+            if(!confirm("Delete this item?")) return;
+            if (type === 'contact') return;
+            localDB[type] = localDB[type].filter(x => x.id !== id);
+            await saveToCloud();
+        };
+
+        async function saveToCloud() {
+            if(isFirebaseActive) {
+                try { await setDoc(dbRef, localDB); alert("Saved!"); } 
+                catch(e) { alert("Error: " + e.message); }
+            } else {
+                localStorage.setItem('PrimeAtlasDB', JSON.stringify(localDB));
+                renderAll();
+                alert("Saved Locally");
+            }
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function renderAll() {
+            renderContact();
+            renderCategories();
+            renderPlatforms();
+            renderHomeProducts();
+            renderTopCategoriesPage();
+            renderUnderCategoriesPage();
+            renderTopPlatformsPage();
+            updateCartBadge();
+        }
+
+        function renderContact() {
+            const c = localDB.contact || {};
+            const area = document.getElementById('contact-area');
+            let html = '';
+            if(c.insta) html += `<a href="${c.insta}" target="_blank" style="color:#E1306C; font-size:1.8rem;"><i class="fab fa-instagram"></i></a>`;
+            if(c.wa) html += `<a href="https://wa.me/${c.wa}" target="_blank" style="color:#25D366; font-size:1.8rem;"><i class="fab fa-whatsapp"></i></a>`;
+            if(c.phone) html += `<a href="tel:${c.phone}" style="color:#34b7f1; font-size:1.8rem;"><i class="fas fa-phone"></i></a>`;
+            if(html === '') html = '<span style="color:gray; font-size:0.8rem;">Contact info not set</span>';
+            area.innerHTML = html;
+        }
+
+        // --- UPDATED FILTER RENDERING ---
+        function renderCategories() {
+            const list = document.getElementById('type-cat-list');
+            
+            // "All Categories" circle
+            let html = `
+                <div class="circle-item ${activeCategory === 'all' ? 'active-filter' : ''}" onclick="window.setFilter('category', 'all')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3502/3502685.png" class="circle-img" style="background:#fff;">
+                    <div class="circle-text">All</div>
+                </div>`;
+
+            html += localDB.categories.map(c => `
+                <div class="circle-item ${activeCategory === c.name ? 'active-filter' : ''}" 
+                     onclick="window.setFilter('category', '${c.name}')">
+                    <img src="${c.image}" class="circle-img">
+                    <div class="circle-text">${c.name}</div>
+                    ${isAdmin ? `<button class="btn-del" onclick="window.deleteItem('categories', ${c.id}, event)">x</button>` : ''}
+                </div>
+            `).join('');
+            list.innerHTML = html;
+        }
+
+        function renderPlatforms() {
+            const list = document.getElementById('platform-list');
+            
+            // "All Platforms" circle
+            let html = `
+                <div class="circle-item ${activePlatform === 'all' ? 'active-filter' : ''}" onclick="window.setFilter('platform', 'all')">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" class="circle-img" style="background:#fff;">
+                    <div class="circle-text">All</div>
+                </div>`;
+
+            html += localDB.platforms.map(p => `
+                <div class="circle-item ${activePlatform === p.name ? 'active-filter' : ''}" 
+                     onclick="window.setFilter('platform', '${p.name}')">
+                    <img src="${p.image}" class="circle-img">
+                    <div class="circle-text">${p.name}</div>
+                    ${isAdmin ? `<button class="btn-del" onclick="window.deleteItem('platforms', ${p.id}, event)">x</button>` : ''}
+                </div>
+            `).join('');
+            list.innerHTML = html;
+        }
+
+        // --- CORE FILTERING LOGIC ---
+        window.setFilter = function(type, value) {
+            if (type === 'platform') {
+                // If clicking the same one, toggle it off (set to all), else set to value
+                if(activePlatform === value && value !== 'all') activePlatform = 'all';
+                else activePlatform = value;
+            } else if (type === 'category') {
+                if(activeCategory === value && value !== 'all') activeCategory = 'all';
+                else activeCategory = value;
+            }
+            renderAll();
+        }
+
+        window.handleSearch = function() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            renderAll();
+        }
+
+        window.clearAllFilters = function() {
+            activePlatform = 'all';
+            activeCategory = 'all';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            renderAll();
+        }
+
+        function renderHomeProducts() {
+            const grid = document.getElementById('main-product-grid');
+            const title = document.getElementById('grid-title');
+            const clearBtn = document.getElementById('clear-filters');
+            
+            let filtered = localDB.products;
+            let titleText = "All Products";
+            
+            // Apply Logic: (Platform matches OR Platform is All) AND (Category matches OR Category is All)
+            filtered = filtered.filter(p => {
+                const matchPlatform = (activePlatform === 'all' || p.platform === activePlatform);
+                const matchCategory = (activeCategory === 'all' || p.category === activeCategory);
+                const matchSearch = (searchQuery === '' || p.name.toLowerCase().includes(searchQuery));
+                return matchPlatform && matchCategory && matchSearch;
+            });
+
+            // Dynamic Title Logic
+            if(activePlatform !== 'all' && activeCategory !== 'all') titleText = `${activePlatform} - ${activeCategory}`;
+            else if (activePlatform !== 'all') titleText = `${activePlatform} Store`;
+            else if (activeCategory !== 'all') titleText = `${activeCategory} Collection`;
+            
+            if(searchQuery !== '') titleText = `Search: "${searchQuery}"`;
+
+            // Show/Hide Clear Button
+            if(activePlatform !== 'all' || activeCategory !== 'all' || searchQuery !== '') {
+                clearBtn.style.display = 'inline-block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+
+            title.innerText = titleText;
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="no-data">No matching products found.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => {
+                const isAdded = userCart.includes(p.id);
+                return `
+                <div class="product-card">
+                    <span class="platform-tag">${p.platform}</span>
+                    
+                    <div class="cart-btn-overlay ${isAdded ? 'added' : ''}" onclick="window.toggleCart(${p.id}, event)">
+                        <i class="fas ${isAdded ? 'fa-check' : 'fa-cart-plus'}"></i>
+                    </div>
+
+                    <img src="${p.image}" class="prod-img" onclick="window.openProductView(${p.id}, 'products')">
+                    <div class="prod-details">
+                        <div class="prod-name" onclick="window.openProductView(${p.id}, 'products')">${p.name}</div>
+                        <div class="price-row">
+                            <span class="new-price">₹${p.newPrice}</span>
+                            <span class="old-price">₹${p.oldPrice}</span>
+                        </div>
+                        <div class="buy-btn-small" onclick="window.openProductView(${p.id}, 'products')">View Deal</div>
+                        ${isAdmin ? `
+                        <div style="display:flex; margin-top:5px;">
+                            <button class="btn-edit" style="width:50%" onclick="window.openEditModal('product', ${p.id}, event)">Edit</button>
+                            <button class="btn-del" style="width:50%" onclick="window.deleteItem('products', ${p.id}, event)">Del</button>
+                        </div>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderTopPlatformsPage() {
+            const grid = document.getElementById('top-platform-grid');
+            if(localDB.topPlatforms.length === 0) { grid.innerHTML = `<div class="no-data">No platforms added.</div>`; return; }
+            grid.innerHTML = localDB.topPlatforms.map(p => `
+                <div class="product-card" style="cursor:pointer;" onclick="window.open('${p.link}', '_blank')">
+                    <img src="${p.image}" class="prod-img" style="object-fit:contain; padding:10px;">
+                    <div class="prod-details" style="text-align:center;">
+                        <h3 style="color:var(--primary); margin-bottom:5px;">${p.name}</h3>
+                        <div class="buy-btn-small" style="background:var(--secondary); color:white;">Shop Now</div>
+                        ${isAdmin ? `<div style="display:flex; margin-top:5px;"><button class="btn-edit" style="width:50%" onclick="window.openEditModal('topPlatform', ${p.id}, event)">Edit</button><button class="btn-del" style="width:50%" onclick="window.deleteItem('topPlatforms', ${p.id}, event)">Del</button></div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- CART LOGIC ---
+        window.toggleCart = function(id, event) {
+            if(event) event.stopPropagation();
+            const idx = userCart.indexOf(id);
+            if(idx > -1) {
+                userCart.splice(idx, 1); // Remove
+            } else {
+                userCart.push(id); // Add
+            }
+            localStorage.setItem('primeUserCart', JSON.stringify(userCart));
+            renderAll(); // Re-render to show checks/updates
+            
+            // Also update button inside View Modal if open
+            updateViewModalCartBtn(id);
+        };
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            if(userCart.length > 0) {
+                badge.style.display = 'flex';
+                badge.innerText = userCart.length;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        window.openCartModal = function() {
+            document.getElementById('cartModal').style.display = 'flex';
+            const container = document.getElementById('cart-items-container');
+            
+            if(userCart.length === 0) {
+                container.innerHTML = '<div class="no-data">Your cart is empty.</div>';
+                return;
+            }
+
+            // Find products in both lists
+            const allItems = [...localDB.products, ...localDB.topCatProducts];
+            const cartProducts = allItems.filter(p => userCart.includes(p.id));
+            
+            // Remove Duplicates in display (if same item ID exists in multiple lists)
+            const uniqueCart = Array.from(new Set(cartProducts.map(a => a.id)))
+                .map(id => { return cartProducts.find(a => a.id === id) });
+
+            container.innerHTML = uniqueCart.map(p => {
+                // Determine source type for openProductView
+                const isTopCat = localDB.topCatProducts.some(tc => tc.id === p.id);
+                const source = isTopCat ? 'topCatProducts' : 'products';
+
+                return `
+                <div class="cart-row">
+                    <img src="${p.image}" class="cart-img" style="cursor:pointer;" onclick="window.closeModal('cartModal'); window.openProductView(${p.id}, '${source}')">
+                    <div class="cart-info" style="cursor:pointer;" onclick="window.closeModal('cartModal'); window.openProductView(${p.id}, '${source}')">
+                        <div class="prod-name" style="height:auto; -webkit-line-clamp:1;">${p.name}</div>
+                        <div class="new-price">₹${p.newPrice}</div>
+                    </div>
+                    <div class="cart-actions">
+                         <a href="${p.link}" target="_blank" class="btn" style="padding:5px 10px; font-size:0.7rem; width:auto;">Buy</a>
+                         <i class="fas fa-trash" style="color:#ff416c; cursor:pointer;" onclick="window.toggleCart(${p.id}); window.openCartModal();"></i>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function updateViewModalCartBtn(id) {
+            // Helper to update button text inside View Modal
+            const btn = document.getElementById('pv-cart-btn');
+            if(userCart.includes(id)) {
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                btn.style.background = '#00ff88';
+                btn.style.color = 'black';
+            } else {
+                btn.innerHTML = '<i class="fas fa-cart-plus"></i>';
+                btn.style.background = 'var(--highlight)';
+                btn.style.color = 'white';
+            }
+        }
+
+        // --- OTHER PAGE RENDERS ---
+        function renderTopCategoriesPage() {
+            const container = document.getElementById('top-cat-container');
+            container.innerHTML = localDB.topCategories.map(cat => {
+                const catProds = localDB.topCatProducts.filter(p => p.topCatId == cat.id);
+                return `
+                    <div class="glass-card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <h3 style="color:var(--primary)">${cat.name}</h3>
+                            ${isAdmin ? `<span><button class="btn-del" style="background:green" onclick="window.openAddModal('topCatProduct', ${cat.id})">+ Add</button> <button class="btn-del" onclick="window.deleteItem('topCategories', ${cat.id})">Del</button></span>` : ''}
+                        </div>
+                        <div class="h-scroll">
+                            ${catProds.length > 0 ? catProds.map(p => 
+                                `<div style="min-width:140px; margin-right:10px;">
+                                    <div class="product-card" style="width:140px;" onclick="window.openProductView(${p.id}, 'topCatProducts')">
+                                        <img src="${p.image}" class="prod-img" style="height:100px;">
+                                        <div style="padding:5px;">
+                                            <div class="prod-name">${p.name}</div>
+                                            <div class="new-price">₹${p.newPrice}</div>
+                                            <div class="buy-btn-small">View</div>
+                                            ${isAdmin ? `<div style="display:flex;"><button class="btn-edit" style="width:50%" onclick="window.openEditModal('topCatProduct', ${p.id}, event)">Edit</button><button class="btn-del" style="width:50%" onclick="window.deleteItem('topCatProducts', ${p.id})">Del</button></div>` : ''}
+                                        </div>
+                                    </div>
+                                </div>`
+                            ).join('') : '<p class="no-data">No items.</p>'}
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        function renderUnderCategoriesPage() {
+            const container = document.getElementById('under-cat-container');
+            container.innerHTML = localDB.underCategories.map(cat => {
+                const qualified = localDB.products.filter(p => parseInt(p.newPrice) <= parseInt(cat.limit));
+                return `
+                    <div class="glass-card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <h3>${cat.name} <small>(${qualified.length})</small></h3>
+                            ${isAdmin ? `<button class="btn-del" onclick="window.deleteItem('underCategories', ${cat.id})">Del</button>` : ''}
+                        </div>
+                        <div class="h-scroll">
+                             ${qualified.length > 0 ? qualified.map(p => 
+                                `<div style="min-width:140px; margin-right:10px;">
+                                    <div class="product-card" style="width:140px;" onclick="window.openProductView(${p.id}, 'products')">
+                                        <img src="${p.image}" class="prod-img" style="height:100px;">
+                                        <div style="padding:5px;">
+                                            <div class="prod-name">${p.name}</div>
+                                            <div class="new-price">₹${p.newPrice}</div>
+                                            <div class="buy-btn-small">View</div>
+                                        </div>
+                                    </div>
+                                </div>`
+                            ).join('') : '<p class="no-data">No matches.</p>'}
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        window.switchPage = function(pid, el) {
+            document.querySelectorAll('.page-section').forEach(p=>p.classList.remove('active-page'));
+            document.getElementById(pid).classList.add('active-page');
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+            el.classList.add('active');
+        }
+
+        // --- ADMIN LOGIC ---
+        window.toggleAdminLogin = function() {
+            if(isAdmin) {
+                isAdmin = false;
+                document.getElementById('fab').style.display = 'none';
+                document.getElementById('contact-edit-btn').style.display = 'none'; 
+                alert("Logged Out");
+                renderAll();
+            } else { document.getElementById('loginModal').style.display = 'flex'; }
+        }
+        
+        window.verifyAdmin = function() {
+            if(document.getElementById('adminId').value === "Earnkaro9.6" && document.getElementById('adminPass').value === "Edith@9.6") {
+                isAdmin = true;
+                document.getElementById('fab').style.display = 'flex';
+                document.getElementById('contact-edit-btn').style.display = 'block'; 
+                window.closeModal('loginModal');
+                renderAll();
+            } else alert("Wrong details");
+        }
+
+        // --- FORM HELPERS ---
+        let currentAddType = '', currentParentId = null;
+        window.openAddModal = function(specificType = null, parentId = null) {
+            isEditing = false; editingId = null;
+            document.getElementById('saveBtn').innerText = "Save to Cloud";
+            document.getElementById('modalTitle').innerText = "Add Item";
+            document.getElementById('dataModal').style.display = 'flex';
+            const inputs = document.getElementById('dynamicInputs');
+            inputs.innerHTML = '';
+            currentParentId = parentId;
+
+            if(!specificType) {
+                document.getElementById('modalTitle').innerText = "Select Type";
+                inputs.innerHTML = `<div class="input-group"><select onchange="window.renderFormInputs(this.value)"><option value="">-- Choose --</option><option value="product">Product (Home)</option><option value="topPlatform">Top Platform</option><option value="platform">Platform Filter</option><option value="category">Category Filter</option><option value="topCategory">Top Collection</option><option value="underCategory">Under Range</option></select></div><div id="subForm"></div>`;
+            } else window.renderFormInputs(specificType);
+        }
+
+        window.openEditModal = function(type, id, event) {
+            if(event) event.stopPropagation();
+            isEditing = true; editingId = id; currentAddType = type; 
+            document.getElementById('dataModal').style.display = 'flex';
+            document.getElementById('modalTitle').innerText = "Edit Item";
+            document.getElementById('saveBtn').innerText = "Update Item";
+
+            let item;
+            if(type === 'product') item = localDB.products.find(p => p.id === id);
+            else if(type === 'topCatProduct') item = localDB.topCatProducts.find(p => p.id === id);
+            else if(type === 'topPlatform') item = localDB.topPlatforms.find(p => p.id === id);
+            if(!item) return;
+
+            window.renderFormInputs(type);
+            setTimeout(() => {
+                const set = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val; };
+                set('iName', item.name); set('iPlatform', item.platform); set('iCat', item.category);
+                set('iImg', item.image); set('iGallery', item.gallery ? item.gallery.join('\n') : '');
+                set('iVideo', item.video || ''); set('iLink', item.link);
+                set('iNew', item.newPrice); set('iOld', item.oldPrice);
+            }, 50);
+        }
+
+        window.openEditContactModal = function() {
+            document.getElementById('dataModal').style.display = 'flex';
+            document.getElementById('modalTitle').innerText = "Edit Contact";
+            window.renderFormInputs('contact');
+        }
+
+        window.renderFormInputs = function(type) {
+            currentAddType = type;
+            const container = document.getElementById('subForm') || document.getElementById('dynamicInputs');
+            
+            let platformOptions = `<option value="">Select Platform</option>` + localDB.platforms.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            let categoryOptions = `<option value="">Select Category</option>` + localDB.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+            let html = '';
+            if(type === 'product' || type === 'topCatProduct') {
+                html = `<input class="input-group" id="iName" placeholder="Product Name">${type === 'product' ? `<select class="input-group" id="iPlatform">${platformOptions}</select>` : `<input class="input-group" id="iPlatform" placeholder="Platform Name">`}${type === 'product' ? `<select class="input-group" id="iCat">${categoryOptions}</select>` : ''}<input class="input-group" id="iImg" placeholder="Main Image URL"><textarea class="input-group" id="iGallery" placeholder="Gallery URLs (One per line)"></textarea><input class="input-group" id="iVideo" placeholder="Video URL"><input class="input-group" id="iLink" placeholder="Affiliate Link"><input class="input-group" id="iNew" type="number" placeholder="New Price"><input class="input-group" id="iOld" type="number" placeholder="Old Price">`;
+            } else if (type === 'platform' || type === 'category') {
+                html = `<input class="input-group" id="iName" placeholder="Name"><input class="input-group" id="iImg" placeholder="Image/Logo URL">`;
+            } else if (type === 'topPlatform') {
+                html = `<input class="input-group" id="iName" placeholder="Name"><input class="input-group" id="iImg" placeholder="Logo URL"><input class="input-group" id="iLink" placeholder="Link">`;
+            } else if (type === 'contact') {
+                const c = localDB.contact || {};
+                html = `<input class="input-group" id="iInsta" value="${c.insta}" placeholder="Insta"><input class="input-group" id="iWa" value="${c.wa}" placeholder="Whatsapp"><input class="input-group" id="iPhone" value="${c.phone}" placeholder="Phone">`;
+            } else if (type === 'underCategory') {
+                html = `<input class="input-group" id="iName" placeholder="Name"><input class="input-group" id="iLimit" type="number" placeholder="Limit">`;
+            } else if (type === 'topCategory') { html = `<input class="input-group" id="iName" placeholder="Title">`; }
+            container.innerHTML = html;
+        }
+
+        window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; }
+
+        // --- PRODUCT VIEW ---
+        let currentSlideIndex = 0;
+        let currentSlides = [];
+
+        window.openProductView = function(id, sourceType) {
+            let product;
+            if(sourceType === 'products') product = localDB.products.find(p => p.id === id);
+            else if(sourceType === 'topCatProducts') product = localDB.topCatProducts.find(p => p.id === id);
+            if(!product) return;
+
+            document.getElementById('pv-name').innerText = product.name;
+            document.getElementById('pv-platform').innerText = product.platform;
+            document.getElementById('pv-new').innerText = '₹' + product.newPrice;
+            document.getElementById('pv-old').innerText = '₹' + product.oldPrice;
+            document.getElementById('pv-buy-btn').href = product.link;
+            
+            // Setup Cart Button inside Modal
+            const cartBtn = document.getElementById('pv-cart-btn');
+            cartBtn.setAttribute('onclick', `window.toggleCart(${product.id})`);
+            updateViewModalCartBtn(product.id);
+
+            currentSlides = [product.image];
+            if(product.gallery) currentSlides = currentSlides.concat(product.gallery);
+            
+            const slideContainer = document.getElementById('pv-slides');
+            const thumbContainer = document.getElementById('pv-thumbs');
+            slideContainer.innerHTML = ''; thumbContainer.innerHTML = '';
+
+            currentSlides.forEach((img, idx) => {
+                slideContainer.innerHTML += `<img src="${img}" class="carousel-slide ${idx===0?'active':''}">`;
+                thumbContainer.innerHTML += `<img src="${img}" class="thumb-img ${idx===0?'active':''}" onclick="window.setSlide(${idx})">`;
+            });
+            currentSlideIndex = 0;
+
+            const videoDiv = document.getElementById('pv-video');
+            if(product.video && product.video.trim() !== "") {
+                videoDiv.style.display = 'block';
+                let vId = product.video.split('v=')[1] || product.video.split('/').pop();
+                videoDiv.innerHTML = `<iframe src="https://www.youtube.com/embed/${vId}" frameborder="0" allowfullscreen></iframe>`;
+            } else { videoDiv.style.display = 'none'; }
+
+            document.getElementById('viewProductModal').style.display = 'flex';
+        }
+
+        window.changeSlide = function(n) { window.showSlide(currentSlideIndex += n); }
+        window.setSlide = function(n) { window.showSlide(currentSlideIndex = n); }
+        window.showSlide = function(n) {
+            const slides = document.getElementsByClassName("carousel-slide");
+            const thumbs = document.getElementsByClassName("thumb-img");
+            if (n >= slides.length) currentSlideIndex = 0;
+            if (n < 0) currentSlideIndex = slides.length - 1;
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                thumbs[i].classList.remove("active");
+            }
+            slides[currentSlideIndex].style.display = "block";
+            thumbs[currentSlideIndex].classList.add("active");
+        }
+    </script>
+</body>
+</html>
