@@ -390,15 +390,15 @@
                     idx = list.findIndex(x => x.id == editingId);
                     if(idx > -1) {
                         if(currentAddType === 'topPlatform') {
-                            list[idx].name = getVal('iName');
+                            list[idx].name = getVal('iName').trim();
                             list[idx].image = getVal('iImg');
                             list[idx].link = getVal('iLink');
                         } else {
                              const galleryText = getVal('iGallery');
                              const galleryArr = galleryText ? galleryText.split('\n').filter(url => url.trim() !== '') : [];
                              
-                             list[idx].name = getVal('iName');
-                             list[idx].platform = getVal('iPlatform');
+                             list[idx].name = getVal('iName').trim();
+                             list[idx].platform = getVal('iPlatform').trim();
                              list[idx].image = getVal('iImg');
                              list[idx].gallery = galleryArr;
                              list[idx].video = getVal('iVideo');
@@ -406,7 +406,7 @@
                              list[idx].newPrice = getVal('iNew');
                              list[idx].oldPrice = getVal('iOld');
                              
-                             if(currentAddType === 'product') list[idx].category = getVal('iCat');
+                             if(currentAddType === 'product') list[idx].category = getVal('iCat').trim();
                         }
                     }
                 }
@@ -423,8 +423,8 @@
                     
                     const newItem = {
                         id, 
-                        name: getVal('iName'), 
-                        platform: getVal('iPlatform'), 
+                        name: getVal('iName').trim(), 
+                        platform: getVal('iPlatform').trim(), 
                         image: getVal('iImg'), 
                         gallery: galleryArr,
                         video: getVal('iVideo'),
@@ -434,16 +434,16 @@
                     };
 
                     if (currentAddType === 'product') {
-                        newItem.category = getVal('iCat');
+                        newItem.category = getVal('iCat').trim();
                         localDB.products.unshift(newItem);
                     } else {
                         newItem.topCatId = currentParentId;
                         localDB.topCatProducts.push(newItem);
                     }
                 } else if (currentAddType === 'platform') {
-                    localDB.platforms.push({ id, name: getVal('iName'), image: getVal('iImg') });
+                    localDB.platforms.push({ id, name: getVal('iName').trim(), image: getVal('iImg') });
                 } else if (currentAddType === 'category') {
-                    localDB.categories.push({ id, name: getVal('iName'), image: getVal('iImg') });
+                    localDB.categories.push({ id, name: getVal('iName').trim(), image: getVal('iImg') });
                 } else if (currentAddType === 'contact') {
                     localDB.contact = { 
                         insta: getVal('iInsta'), 
@@ -451,11 +451,11 @@
                         phone: getVal('iPhone') 
                     };
                 } else if (currentAddType === 'topCategory') {
-                    localDB.topCategories.push({id, name: getVal('iName')});
+                    localDB.topCategories.push({id, name: getVal('iName').trim()});
                 } else if (currentAddType === 'underCategory') {
-                    localDB.underCategories.push({id, name: getVal('iName'), limit: getVal('iLimit')});
+                    localDB.underCategories.push({id, name: getVal('iName').trim(), limit: getVal('iLimit')});
                 } else if (currentAddType === 'topPlatform') {
-                    localDB.topPlatforms.push({ id, name: getVal('iName'), image: getVal('iImg'), link: getVal('iLink') });
+                    localDB.topPlatforms.push({ id, name: getVal('iName').trim(), image: getVal('iImg'), link: getVal('iLink') });
                 }
             }
 
@@ -516,14 +516,16 @@
                     <div class="circle-text">All</div>
                 </div>`;
 
-            html += localDB.categories.map(c => `
+            html += localDB.categories.map(c => {
+                const safeName = c.name.replace(/'/g, "\\'");
+                return `
                 <div class="circle-item ${activeCategory === c.name ? 'active-filter' : ''}" 
-                     onclick="window.setFilter('category', '${c.name}')">
+                     onclick="window.setFilter('category', '${safeName}')">
                     <img src="${c.image}" class="circle-img">
                     <div class="circle-text">${c.name}</div>
                     ${isAdmin ? `<button class="btn-del" onclick="window.deleteItem('categories', ${c.id}, event)">x</button>` : ''}
-                </div>
-            `).join('');
+                </div>`
+            }).join('');
             list.innerHTML = html;
         }
 
