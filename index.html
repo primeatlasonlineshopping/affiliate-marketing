@@ -53,23 +53,7 @@
             z-index: 0;
         }
 
-        /* Floating orbs */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(60px);
-            pointer-events: none;
-            z-index: 0;
-            animation: orbFloat 12s ease-in-out infinite;
-        }
-        .orb1 { width:300px; height:300px; background:rgba(212,168,67,0.06); top:-100px; left:-100px; animation-delay:0s; }
-        .orb2 { width:200px; height:200px; background:rgba(0,200,150,0.07); bottom:20%; right:-80px; animation-delay:-4s; }
-        .orb3 { width:150px; height:150px; background:rgba(79,195,247,0.05); top:50%; left:30%; animation-delay:-8s; }
-        @keyframes orbFloat {
-            0%, 100% { transform: translate(0,0) scale(1); }
-            33% { transform: translate(30px,-20px) scale(1.1); }
-            66% { transform: translate(-20px,30px) scale(0.95); }
-        }
+        /* Orbs removed - filter:blur on animated elements = severe GPU lag */
 
         /* ===== KEYFRAMES ===== */
         @keyframes fadeUp   { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
@@ -90,9 +74,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(5,13,26,0.96);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: #070F1E;
             border-bottom: 1px solid var(--border);
             padding: 0 18px;
             height: 62px;
@@ -106,8 +88,6 @@
             bottom: 0; left: 0; right: 0;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--gold), var(--emerald), var(--gold), transparent);
-            animation: shimmer 3s linear infinite;
-            background-size: 200% auto;
         }
         .logo {
             display: flex;
@@ -117,7 +97,6 @@
             font-size: 1.3rem;
             font-weight: 800;
             color: var(--gold);
-            animation: neonGlow 3s ease-in-out infinite;
             letter-spacing: 0.5px;
         }
         .logo-icon {
@@ -130,7 +109,6 @@
             justify-content: center;
             color: var(--navy-deep);
             font-size: 1rem;
-            animation: goldPulse 3s ease-in-out infinite;
         }
         .logo-sub {
             font-family: 'DM Sans', sans-serif;
@@ -167,7 +145,6 @@
             font-size: 0.65rem;
             display: flex; align-items:center; justify-content:center;
             font-weight: 700;
-            animation: heartbeat 1.5s ease-in-out infinite;
             border: 2px solid var(--navy-deep);
         }
         .admin-btn-wrap {
@@ -190,7 +167,7 @@
             background: var(--crimson);
             border: 1.5px solid var(--navy-deep);
         }
-        .auth-status.online { background: var(--emerald); animation: goldPulse 2s ease-in-out infinite; }
+        .auth-status.online { background: var(--emerald); }
 
         /* ===== TRUST BAR ===== */
         .trust-bar {
@@ -292,7 +269,7 @@
         }
 
         /* ===== FILTER CIRCLES ===== */
-        .h-scroll { display:flex; overflow-x:auto; gap:12px; padding:6px 15px 14px; scrollbar-width:none; }
+        .h-scroll { display:flex; overflow-x:auto; gap:12px; padding:6px 15px 14px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
         .h-scroll::-webkit-scrollbar { display:none; }
         .filter-chip {
             min-width: 72px;
@@ -373,18 +350,7 @@
         }
         .prod-card:active::before { opacity: 1; }
 
-        /* Scan-line effect */
-        .prod-card .scan-line {
-            position: absolute;
-            left: 0; right: 0;
-            height: 40px;
-            background: linear-gradient(180deg, transparent, rgba(212,168,67,0.04), transparent);
-            z-index: 5;
-            pointer-events: none;
-            animation: scanLine 4s linear infinite;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+        /* scan-line removed - top position animation causes layout recalc every frame */
 
         .prod-img-wrap {
             position: relative;
@@ -424,9 +390,7 @@
             display: flex; align-items:center; justify-content:center;
             font-size: 0.75rem;
             cursor: pointer;
-            z-index: 5;
-            transition: all 0.3s;
-            backdrop-filter: blur(5px);
+            transition: background 0.15s, border-color 0.15s;
         }
         .cart-fab.added {
             background: var(--emerald);
@@ -487,17 +451,6 @@
             width: 100%;
             letter-spacing: 0.3px;
             font-family: 'DM Sans', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
-        .view-btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 2.5s linear infinite;
         }
         .admin-btns { display:flex; gap:5px; margin-top:7px; }
         .btn-edit { flex:1; background:rgba(255,152,0,0.2); border:1px solid rgba(255,152,0,0.4); color:#FFA000; padding:5px; font-size:0.65rem; border-radius:7px; cursor:pointer; font-weight:600; }
@@ -608,7 +561,7 @@
         .banner-dots { display:flex; justify-content:center; gap:6px; padding:10px; background:var(--navy-deep); }
         .banner-dot { width:6px; height:6px; border-radius:50%; background:rgba(212,168,67,0.25); cursor:pointer; transition:all 0.3s; }
         .banner-dot.active { background:var(--gold); width:22px; border-radius:3px; }
-        .banner-nav { position:absolute; top:50%; transform:translateY(-50%); width:30px; height:30px; border-radius:50%; background:rgba(5,13,26,0.7); backdrop-filter:blur(5px); border:1px solid var(--border); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:0.8rem; cursor:pointer; z-index:10; }
+        .banner-nav { position:absolute; top:50%; transform:translateY(-50%); width:30px; height:30px; border-radius:50%; background:rgba(5,13,26,0.85); border:1px solid var(--border); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:0.8rem; cursor:pointer; z-index:10; }
         .banner-prev { left:10px; }
         .banner-next { right:10px; }
         .banner-empty { text-align:center; padding:40px 20px; color:var(--text-muted); }
@@ -617,8 +570,7 @@
         .bottom-nav {
             position: fixed;
             bottom: 0; width: 100%;
-            background: rgba(5,13,26,0.97);
-            backdrop-filter: blur(20px);
+            background: #07101E;
             border-top: 1px solid var(--border);
             display: flex;
             z-index: 999;
@@ -665,10 +617,9 @@
             justify-content: center;
             font-size: 1.4rem;
             font-weight: 700;
-            box-shadow: 0 4px 20px rgba(212,168,67,0.5), 0 0 40px rgba(212,168,67,0.2);
+            box-shadow: 0 4px 20px rgba(212,168,67,0.4);
             z-index: 999;
             cursor: pointer;
-            animation: goldPulse 2s ease-in-out infinite;
         }
 
         /* ===== MODALS ===== */
@@ -680,7 +631,6 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(5px);
         }
         .modal-content {
             background: linear-gradient(160deg, var(--navy-light), var(--navy-mid));
@@ -738,8 +688,7 @@
         .btn-gold {
             width: 100%;
             padding: 13px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-            background-size: 200% auto;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
             border: none;
             border-radius: 12px;
             color: var(--navy-deep);
@@ -749,8 +698,6 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            transition: all 0.3s;
-            animation: shimmer 3s linear infinite;
         }
         .btn-gold:active { transform:scale(0.98); }
         .btn-orange {
@@ -774,6 +721,12 @@
         .active-page { display:block; }
         .no-data { text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.85rem; grid-column:span 2; }
         .no-data i { display:block; font-size:2.5rem; margin-bottom:12px; color:var(--gold); opacity:0.4; }
+
+        /* === PERFORMANCE === */
+        .banner-track { will-change: transform; }
+        .trust-bar-inner { will-change: transform; }
+        .prod-card { contain: layout style; }
+        .plat-card { contain: layout style; }
 
         /* ===== VIEW PRODUCT MODAL ===== */
         .carousel-container {
@@ -836,7 +789,6 @@
             font-size: 1.8rem;
             font-weight: 800;
             color: var(--gold);
-            animation: neonGlow 3s ease-in-out infinite;
             margin-bottom: 6px;
         }
         .top-plat-header p { color:var(--text-muted); font-size:0.8rem; }
@@ -873,8 +825,6 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             z-index: 1;
-            animation: shimmer 4s linear infinite;
-            background-size: 200% auto;
         }
         .plat-card-inner {
             position: relative;
@@ -886,22 +836,17 @@
             gap: 10px;
             min-height: 165px;
         }
-        /* Glow blob behind logo */
         .plat-glow {
             position: absolute;
             top: 10px;
             width: 70px; height: 70px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(212,168,67,0.2), transparent 70%);
-            filter: blur(12px);
-            animation: floatUp 3s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(212,168,67,0.15), transparent 70%);
         }
         .plat-logo-wrap {
             position: relative;
             width: 68px; height: 68px;
-            animation: floatUp 3s ease-in-out infinite;
         }
-        .plat-logo-wrap:nth-child(even) { animation-delay: 1.2s; }
         .plat-logo {
             width: 68px; height: 68px;
             border-radius: 18px;
@@ -940,22 +885,12 @@
             font-family: 'DM Sans', sans-serif;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
         }
-        .plat-shop-btn::after {
-            content:'';
-            position:absolute;
-            top:0; left:-100%;
-            width:60%; height:100%;
-            background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 2s linear infinite;
-        }
-        /* Sparkles */
+        /* Sparkles - static, no animation */
         .sp { position:absolute; border-radius:50%; z-index:3; }
-        .sp1 { width:4px;height:4px; background:var(--gold); top:12px; right:14px; animation:floatUp 2.2s ease-in-out infinite; }
-        .sp2 { width:3px;height:3px; background:var(--emerald); bottom:20px; left:10px; animation:floatUp 2.8s ease-in-out infinite 0.5s; }
-        .sp3 { width:5px;height:5px; background:var(--sky); top:40%; left:6px; animation:floatUp 3.2s ease-in-out infinite 1s; }
+        .sp1 { width:4px;height:4px; background:var(--gold); top:12px; right:14px; opacity:0.5; }
+        .sp2 { width:3px;height:3px; background:var(--emerald); bottom:20px; left:10px; opacity:0.5; }
+        .sp3 { width:5px;height:5px; background:var(--sky); top:40%; left:6px; opacity:0.4; }
 
         /* ===== TOP CAT / UNDER PAGES ===== */
         .collection-card {
@@ -1004,11 +939,6 @@
     </style>
 </head>
 <body>
-
-    <!-- Animated background orbs -->
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
 
     <!-- HEADER -->
     <header>
@@ -1104,7 +1034,7 @@
             <div class="search-wrap">
                 <div class="search-inner">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search premium products..." onkeyup="window.handleSearch()">
+                    <input type="text" id="searchInput" placeholder="Search premium products..." oninput="window.handleSearch()">
                 </div>
             </div>
 
@@ -1494,12 +1424,11 @@
                 const added=userCart.includes(p.id);
                 const disc=p.oldPrice&&p.newPrice?Math.round((1-parseInt(p.newPrice)/parseInt(p.oldPrice))*100):0;
                 return `<div class="prod-card" style="animation-delay:${i*0.05}s">
-                    <div class="scan-line"></div>
                     <div class="prod-img-wrap">
                         <span class="plat-tag">${p.platform}</span>
                         <div class="cart-fab ${added?'added':''}" onclick="window.toggleCart(${p.id},event)"><i class="fas ${added?'fa-check':'fa-cart-plus'}"></i></div>
                         ${disc>0?`<span class="discount-badge">-${disc}%</span>`:''}
-                        <img src="${p.image}" class="prod-img" onclick="window.openProductView(${p.id},'products')" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+                        <img src="${p.image}" loading="lazy" class="prod-img" onclick="window.openProductView(${p.id},'products')" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
                     </div>
                     <div class="prod-body">
                         <div class="prod-name" onclick="window.openProductView(${p.id},'products')">${p.name}</div>
@@ -1527,7 +1456,7 @@
                         <div class="sp sp3"></div>
                         <div class="plat-glow"></div>
                         <div class="plat-logo-wrap" style="animation-delay:${i%2===0?'0s':'1.2s'}">
-                            <img src="${p.image}" class="plat-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
+                            <img src="${p.image}" loading="lazy" class="plat-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
                             <div class="plat-verified"><i class="fas fa-check"></i></div>
                         </div>
                         <div class="plat-name">${p.name}</div>
@@ -1704,7 +1633,7 @@
             document.getElementById(pid).classList.add('active-page');
             document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
             el.classList.add('active');
-            window.scrollTo(0,0);
+            window.scrollTo({top:0, behavior:'instant'});
         }
 
         window.openAddModal=function(type=null,parentId=null){
