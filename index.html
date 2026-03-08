@@ -1354,15 +1354,40 @@
 
     <!-- VIEW PRODUCT MODAL -->
     <div id="viewProductModal" class="modal">
-        <div class="modal-content" style="max-height:95vh; overflow-y:scroll;">
-            <div class="modal-close" onclick="window.closeModal('viewProductModal')"><i class="fas fa-times"></i></div>
-            <div id="pv-carousel" class="carousel-container">
+        <div class="modal-content" style="max-height:95vh; overflow-y:scroll; padding-top:0;">
+            <!-- Product modal header with back button -->
+            <div style="
+                display:flex; align-items:center; justify-content:space-between;
+                padding:14px 14px 10px; position:sticky; top:0; z-index:20;
+                background:#fff; border-bottom:1.5px solid #F1F4FB;
+                margin-bottom:8px;
+            ">
+                <button onclick="window.closeModal('viewProductModal')" style="
+                    display:flex; align-items:center; gap:7px;
+                    background:#EFF6FF; border:1.5px solid #BFDBFE;
+                    color:#2563EB; font-size:0.82rem; font-weight:700;
+                    padding:8px 16px; border-radius:25px; cursor:pointer;
+                    font-family:'DM Sans',sans-serif;
+                    box-shadow:0 2px 8px rgba(37,99,235,0.12);
+                    transition:all 0.2s;
+                ">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div style="font-size:0.78rem; font-weight:600; color:#94A3B8; letter-spacing:0.3px;">Product Details</div>
+                <button onclick="window.shareProductLink()" style="
+                    width:36px; height:36px; border-radius:50%;
+                    background:#F0FDF4; border:1.5px solid #A7F3D0;
+                    color:#059669; font-size:0.9rem; cursor:pointer;
+                    display:flex; align-items:center; justify-content:center;
+                "><i class="fas fa-share-alt"></i></button>
+            </div>
+            <div id="pv-carousel" class="carousel-container" style="margin:0 14px; border-radius:16px;">
                 <button class="c-btn c-prev" onclick="window.changeSlide(-1)">&#10094;</button>
                 <div id="pv-slides" style="width:100%;"></div>
                 <button class="c-btn c-next" onclick="window.changeSlide(1)">&#10095;</button>
             </div>
-            <div id="pv-thumbs" class="thumb-row"></div>
-            <div style="padding:4px 0 12px;">
+            <div id="pv-thumbs" class="thumb-row" style="padding:6px 14px;"></div>
+            <div style="padding:4px 14px 12px;">
                 <span id="pv-platform" style="display:inline-block; background:var(--gold-pale); color:var(--gold); border:1px solid rgba(212,168,67,0.3); font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:7px; margin-bottom:10px;">Platform</span>
                 <h2 id="pv-name" style="font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--text-white); margin-bottom:10px; line-height:1.4;">Product Name</h2>
                 <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
@@ -1376,7 +1401,7 @@
                     <span style="font-size:0.65rem; background:rgba(79,195,247,0.1); color:var(--sky); border:1px solid rgba(79,195,247,0.2); padding:3px 9px; border-radius:20px;"><i class="fas fa-bolt"></i> Instant Access</span>
                 </div>
             </div>
-            <div style="display:flex; gap:10px; margin-bottom:9px;">
+            <div style="display:flex; gap:10px; margin-bottom:9px; padding:0 14px;">
                 <a id="pv-buy-btn" href="#" target="_blank" class="btn-gold" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:7px; text-align:center; flex:2; padding:13px; border-radius:12px; font-weight:800; font-size:0.9rem; color:#fff;">
                     <i class="fas fa-shopping-bag"></i> Buy Now
                 </a>
@@ -1384,15 +1409,12 @@
                     <i class="fas fa-cart-plus"></i>
                 </button>
             </div>
-            <div style="display:flex; gap:8px;">
-                <button class="share-btn" onclick="window.shareProductLink()" style="background:#EFF6FF; border-color:#BFDBFE; color:#2563EB;">
-                    <i class="fas fa-share-alt"></i> Share
-                </button>
-                <button class="share-btn" onclick="window.copyProductLink()" style="background:#F0FDF4; border-color:#A7F3D0; color:#059669;">
-                    <i class="fas fa-link"></i> Copy Link
+            <div style="padding:0 14px 6px;">
+                <button class="share-btn" onclick="window.copyProductLink()" style="background:#F0FDF4; border-color:#A7F3D0; color:#059669; width:100%;">
+                    <i class="fas fa-link"></i> Copy Product Link
                 </button>
             </div>
-            <div id="pv-video" class="video-wrap" style="display:none;"></div>
+            <div id="pv-video" class="video-wrap" style="display:none; margin:0 14px 14px;"></div>
         </div>
     </div>
 
