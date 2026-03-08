@@ -1507,7 +1507,23 @@
         }
 
         // ===== PRODUCT PERSONAL LINK =====
-        let _urlChecked=false, _curProdId=null;
+        let _urlChecked=false, _curProdId=null, _noHistoryPush=false;
+
+        // ── BACK BUTTON FIX ──────────────────────────────────────
+        // Runs immediately when script loads (before data fetch).
+        // If page opened via shared #product-xxx link:
+        //   history stack = [ only this one entry ]  → back = exit
+        // We inject a HOME entry BELOW it so back = home, not exit.
+        (function(){
+            if(window.location.hash.startsWith('#product-')){
+                const productHash = window.location.hash; // save it
+                // Step 1: turn current entry into HOME (erase hash)
+                history.replaceState({pa:'home'}, '', location.pathname);
+                // Step 2: push the product entry back on top
+                history.pushState({pa:'product'}, '', productHash);
+                // Now stack = [HOME] [PRODUCT]  ← back goes to HOME ✓
+            }
+        })();
         function checkUrlForProduct(){
             if(_urlChecked) return;
             const hash=window.location.hash;
@@ -1519,14 +1535,13 @@
             if(!p){p=localDB.topCatProducts.find(x=>x.id===id);if(p)src='topCatProducts';}
             if(p){
                 _urlChecked=true;
-                // First: replace current URL with clean home state (no hash)
-                // This ensures pressing back goes to home, not to broken hash
-                history.replaceState({home:true}, '', location.pathname);
-                // Navigate to home page
+                // History stack already prepared by early IIFE above.
+                // Just navigate home page UI silently, then open product.
                 const nav=document.querySelectorAll('.nav-item')[1];
-                if(nav) window.switchPage('home-page',nav);
-                // Then push product state on top
-                setTimeout(()=>window.openProductView(id,src), 250);
+                if(nav) window.switchPage('home-page', nav);
+                // Open modal WITHOUT pushing more history (stack already correct)
+                _noHistoryPush=true;
+                setTimeout(()=>{ window.openProductView(id,src); _noHistoryPush=false; }, 260);
             }
         }
         window.shareProductLink=function(){
@@ -1547,14 +1562,13 @@
         window.addEventListener('popstate', function(e){
             const m=document.getElementById('viewProductModal');
             if(m && m.style.display==='flex'){
-                // Close the product modal
                 m.style.display='none';
                 _curProdId=null;
-                // If state is home, navigate to home page
+            }
+            // If no hash now → we are on HOME state → show home page
+            if(!window.location.hash){
                 const nav=document.querySelectorAll('.nav-item')[1];
-                if(nav && !window.location.hash){
-                    window.switchPage('home-page', nav);
-                }
+                if(nav) window.switchPage('home-page', nav);
             }
         });
 
@@ -1808,8 +1822,9 @@
             else if(src==='topCatProducts') p=localDB.topCatProducts.find(x=>x.id===id);
             if(!p) return;
             _curProdId=id;
-            // pushState so back button works (goes back to previous state)
-            history.pushState({productId:id, src:src}, '', '#product-'+id);
+            if(!_noHistoryPush){
+                history.pushState({pa:'product', id:id, src:src}, '', '#product-'+id);
+            }
             document.getElementById('pv-name').textContent=p.name;
             document.getElementById('pv-platform').textContent=p.platform;
             document.getElementById('pv-new').textContent='₹'+p.newPrice;
