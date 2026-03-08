@@ -780,117 +780,109 @@
         .cart-actions { display:flex; gap:8px; align-items:center; margin-left:auto; flex-shrink:0; }
 
         /* ===== TOP PLATFORMS PAGE ===== */
-        .top-plat-header {
-            text-align: center;
-            padding: 28px 20px 15px;
+        /* ===== TOP PLATFORM PAGE — COLORFUL CARDS ===== */
+        .top-plat-header { text-align:center; padding:20px 20px 6px; }
+        .top-plat-header h2 { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:800; color:#1E293B; margin-bottom:4px; }
+        .top-plat-header p { color:#64748B; font-size:0.82rem; }
+
+        /* Filter tag pills */
+        .plat-page-tags { display:flex; gap:8px; overflow-x:auto; padding:12px 14px 6px; scrollbar-width:none; }
+        .plat-page-tags::-webkit-scrollbar { display:none; }
+        .plat-page-tag {
+            white-space:nowrap; padding:6px 16px; border-radius:25px;
+            font-size:0.73rem; font-weight:700; border:2px solid; cursor:default;
+            display:flex; align-items:center; gap:5px;
         }
-        .top-plat-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: var(--gold);
-            margin-bottom: 6px;
-        }
-        .top-plat-header p { color:var(--text-muted); font-size:0.8rem; }
-        #top-platform-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 0 15px 20px;
-        }
+        .plat-page-tag:nth-child(1) { background:#FFF7ED; color:#EA580C; border-color:#FED7AA; }
+        .plat-page-tag:nth-child(2) { background:#F0FDF4; color:#16A34A; border-color:#A7F3D0; }
+        .plat-page-tag:nth-child(3) { background:#EFF6FF; color:#2563EB; border-color:#BFDBFE; }
+
+        #top-platform-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:10px 14px 24px; }
+
+        /* ===== COLORFUL PLATFORM CARD ===== */
         .plat-card {
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            cursor: pointer;
-            animation: popIn 0.5s ease both;
-            transition: transform 0.3s;
+            position:relative; border-radius:24px; overflow:hidden; cursor:pointer;
+            animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+            transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
+            border:none; box-shadow:0 4px 18px rgba(0,0,0,0.1);
         }
-        .plat-card:active { transform: scale(0.95); }
-        .plat-card-bg {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(145deg, rgba(15,32,64,0.98), rgba(5,13,26,0.98));
-            z-index: 0;
-        }
-        /* Golden gradient border */
+        .plat-card:active { transform:scale(0.93); }
+        .plat-card:hover  { transform:translateY(-6px); box-shadow:0 16px 40px rgba(0,0,0,0.16); }
+
+        /* Each card gets its bg color via nth-child — cycles through 8 colors */
+        .plat-card:nth-child(8n+1) { background:linear-gradient(145deg,#FFF3E0,#FFE0B2); }
+        .plat-card:nth-child(8n+2) { background:linear-gradient(145deg,#E3F2FD,#BBDEFB); }
+        .plat-card:nth-child(8n+3) { background:linear-gradient(145deg,#FCE4EC,#F8BBD0); }
+        .plat-card:nth-child(8n+4) { background:linear-gradient(145deg,#E8F5E9,#C8E6C9); }
+        .plat-card:nth-child(8n+5) { background:linear-gradient(145deg,#F3E5F5,#E1BEE7); }
+        .plat-card:nth-child(8n+6) { background:linear-gradient(145deg,#E0F7FA,#B2EBF2); }
+        .plat-card:nth-child(8n+7) { background:linear-gradient(145deg,#FFFDE7,#FFF9C4); }
+        .plat-card:nth-child(8n+8) { background:linear-gradient(145deg,#E8EAF6,#C5CAE9); }
+
+        /* Top colored border stripe matching card theme */
+        .plat-card:nth-child(8n+1)::before { background:#F97316; }
+        .plat-card:nth-child(8n+2)::before { background:#2563EB; }
+        .plat-card:nth-child(8n+3)::before { background:#E91E8C; }
+        .plat-card:nth-child(8n+4)::before { background:#16A34A; }
+        .plat-card:nth-child(8n+5)::before { background:#9333EA; }
+        .plat-card:nth-child(8n+6)::before { background:#0891B2; }
+        .plat-card:nth-child(8n+7)::before { background:#CA8A04; }
+        .plat-card:nth-child(8n+8)::before { background:#4F46E5; }
+
         .plat-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            padding: 1.5px;
-            background: linear-gradient(135deg, var(--gold), var(--emerald), var(--gold));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            z-index: 1;
+            content:''; position:absolute; top:0; left:0; right:0; height:5px;
+            border-radius:24px 24px 0 0; z-index:1;
         }
+
+        /* Shop button color per card */
+        .plat-card:nth-child(8n+1) .plat-shop-btn { background:#F97316; box-shadow:0 4px 14px rgba(249,115,22,0.4); }
+        .plat-card:nth-child(8n+2) .plat-shop-btn { background:#2563EB; box-shadow:0 4px 14px rgba(37,99,235,0.4); }
+        .plat-card:nth-child(8n+3) .plat-shop-btn { background:#E91E8C; box-shadow:0 4px 14px rgba(233,30,140,0.4); }
+        .plat-card:nth-child(8n+4) .plat-shop-btn { background:#16A34A; box-shadow:0 4px 14px rgba(22,163,74,0.4); }
+        .plat-card:nth-child(8n+5) .plat-shop-btn { background:#9333EA; box-shadow:0 4px 14px rgba(147,51,234,0.4); }
+        .plat-card:nth-child(8n+6) .plat-shop-btn { background:#0891B2; box-shadow:0 4px 14px rgba(8,145,178,0.4); }
+        .plat-card:nth-child(8n+7) .plat-shop-btn { background:#CA8A04; box-shadow:0 4px 14px rgba(202,138,4,0.4); }
+        .plat-card:nth-child(8n+8) .plat-shop-btn { background:#4F46E5; box-shadow:0 4px 14px rgba(79,70,229,0.4); }
+
+        .plat-card-bg { display:none; }
         .plat-card-inner {
-            position: relative;
-            z-index: 2;
-            padding: 22px 12px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            min-height: 165px;
+            position:relative; z-index:2;
+            padding:20px 14px 16px;
+            display:flex; flex-direction:column; align-items:center; gap:10px;
+            min-height:195px;
         }
-        .plat-glow {
-            position: absolute;
-            top: 10px;
-            width: 70px; height: 70px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212,168,67,0.15), transparent 70%);
-        }
-        .plat-logo-wrap {
-            position: relative;
-            width: 68px; height: 68px;
-        }
+        .plat-glow { display:none; }
+
+        .plat-logo-wrap { position:relative; width:88px; height:88px; }
         .plat-logo {
-            width: 68px; height: 68px;
-            border-radius: 18px;
-            object-fit: contain;
-            background: white;
-            padding: 10px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(212,168,67,0.15);
+            width:88px; height:88px; border-radius:20px;
+            object-fit:contain; background:#FFFFFF;
+            padding:11px;
+            box-shadow:0 4px 18px rgba(0,0,0,0.12);
+            transition:transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+            border:none;
         }
-        .plat-verified {
-            position: absolute;
-            bottom: -4px; right: -4px;
-            width: 22px; height: 22px;
-            background: var(--emerald);
-            border-radius: 50%;
-            border: 2px solid var(--navy-deep);
-            display: flex; align-items:center; justify-content:center;
-            font-size: 0.6rem;
-            color: white;
-        }
+        .plat-card:hover .plat-logo { transform:scale(1.08) rotate(-2deg); }
+        .plat-verified { display:none !important; }
+
         .plat-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-white);
-            text-align: center;
+            font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:800;
+            color:#1E293B; text-align:center; letter-spacing:-0.3px;
         }
+
+        .plat-offer { display:none; }
+
         .plat-shop-btn {
-            background: linear-gradient(90deg, var(--gold), var(--gold-light));
-            border: none;
-            color: var(--navy-deep);
-            font-size: 0.7rem;
-            font-weight: 800;
-            padding: 7px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+            width:100%; border:none; color:#fff;
+            font-size:0.8rem; font-weight:800; padding:11px 0;
+            border-radius:14px; cursor:pointer;
+            font-family:'DM Sans',sans-serif; letter-spacing:0.8px;
+            text-transform:uppercase;
+            transition:transform 0.18s, opacity 0.18s;
+            display:flex; align-items:center; justify-content:center; gap:7px;
         }
-        /* Sparkles - static, no animation */
-        .sp { position:absolute; border-radius:50%; z-index:3; }
-        .sp1 { width:4px;height:4px; background:var(--gold); top:12px; right:14px; opacity:0.5; }
-        .sp2 { width:3px;height:3px; background:var(--emerald); bottom:20px; left:10px; opacity:0.5; }
-        .sp3 { width:5px;height:5px; background:var(--sky); top:40%; left:6px; opacity:0.4; }
+        .plat-shop-btn:active { transform:scale(0.95); opacity:0.9; }
+        .sp { display:none; }
 
         /* ===== TOP CAT / UNDER PAGES ===== */
         .collection-card {
@@ -936,6 +928,216 @@
         /* ===== BANNER SELECT CHIPS ===== */
         .banner-chip { display:inline-flex; align-items:center; gap:7px; background:rgba(212,168,67,0.08); border:1px solid rgba(212,168,67,0.25); border-radius:25px; padding:6px 12px; font-size:0.75rem; margin:4px; cursor:pointer; transition:0.2s; color:var(--text-white); }
         .banner-chip.selected { background:var(--gold); color:var(--navy-deep); font-weight:700; border-color:var(--gold); }
+
+        /* ============ WHITE PROFESSIONAL THEME ============ */
+        @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes popIn  { 0%{opacity:0;transform:scale(0.9)} 65%{transform:scale(1.02)} 100%{opacity:1;transform:scale(1)} }
+        @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        @keyframes heartbeat { 0%,100%{transform:scale(1)} 30%{transform:scale(1.18)} 60%{transform:scale(1)} }
+        @keyframes countUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        body { background:#F1F4FB !important; color:#1E293B !important; }
+
+        /* HEADER */
+        header {
+            background:#FFFFFF !important;
+            border-bottom:1px solid #E2E8F0 !important;
+            box-shadow:0 1px 8px rgba(0,0,0,0.07) !important;
+            height:58px !important;
+        }
+        header::after { background:linear-gradient(90deg,transparent,#2563EB,#06B6D4,#10B981,transparent) !important; height:2px !important; }
+        .logo { color:#1E293B !important; font-size:1.15rem !important; }
+        .logo-icon { background:linear-gradient(135deg,#2563EB,#3B82F6) !important; color:#fff !important; box-shadow:0 3px 10px rgba(37,99,235,0.3) !important; border-radius:10px !important; }
+        .logo-sub { color:#10B981 !important; }
+
+        /* Header contact buttons */
+        .hdr-contact-btn {
+            width:34px; height:34px;
+            border-radius:10px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.95rem;
+            text-decoration:none;
+            transition:transform 0.2s, opacity 0.2s;
+        }
+        .hdr-contact-btn:active { transform:scale(0.88); opacity:0.8; }
+
+        .cart-wrap-inner { background:#EFF6FF !important; border:1.5px solid #BFDBFE !important; color:#2563EB !important; width:36px !important; height:36px !important; border-radius:10px !important; }
+        .admin-btn-wrap { background:#ECFDF5 !important; border:1.5px solid #A7F3D0 !important; color:#059669 !important; width:36px !important; height:36px !important; border-radius:10px !important; }
+        .header-right { gap:8px !important; }
+
+        /* TRUST BAR */
+        .trust-bar { background:#fff !important; border-bottom:1px solid #E2E8F0 !important; }
+        .trust-bar-item { color:#64748B !important; font-size:0.71rem !important; }
+        .trust-bar-item i { color:#2563EB !important; }
+
+        /* SEARCH */
+        .search-wrap { padding:12px 14px 8px !important; }
+        .search-inner {
+            background:#FFFFFF !important;
+            border:1.5px solid #E2E8F0 !important;
+            box-shadow:0 2px 10px rgba(0,0,0,0.06) !important;
+            border-radius:14px !important;
+            padding:11px 16px !important;
+        }
+        .search-inner:focus-within { border-color:#2563EB !important; box-shadow:0 0 0 3px rgba(37,99,235,0.1),0 2px 10px rgba(0,0,0,0.06) !important; }
+        .search-inner i { color:#2563EB !important; }
+        .search-inner input { color:#1E293B !important; font-size:0.88rem !important; }
+        .search-inner input::placeholder { color:#94A3B8 !important; }
+
+        /* SECTION TITLES */
+        .sec-title { padding:10px 14px 8px !important; }
+        .sec-title-bar { background:linear-gradient(180deg,#2563EB,#10B981) !important; }
+        .sec-title-text { color:#1E293B !important; font-size:1rem !important; }
+        .sec-badge { background:#FEF2F2 !important; color:#EF4444 !important; border-color:rgba(239,68,68,0.3) !important; animation:heartbeat 2.5s ease-in-out infinite; }
+
+        /* FILTER CHIPS */
+        .h-scroll { padding:4px 14px 12px !important; gap:10px !important; }
+        .chip-img-wrap { background:#fff !important; border-color:#E2E8F0 !important; width:54px !important; height:54px !important; }
+        .filter-chip.active-filter .chip-img-wrap { border-color:#2563EB !important; box-shadow:0 0 0 3px rgba(37,99,235,0.12) !important; }
+        .filter-chip.active-filter .chip-img-wrap::after { background:rgba(37,99,235,0.3) !important; }
+        .chip-label { color:#64748B !important; font-size:0.68rem !important; }
+        .filter-chip.active-filter .chip-label { color:#2563EB !important; }
+
+        /* PRODUCT GRID */
+        .prod-grid { gap:12px !important; padding:0 14px !important; }
+
+        /* PRODUCT CARD */
+        .prod-card {
+            background:#FFFFFF !important;
+            border:1.5px solid #E8ECF4 !important;
+            border-radius:16px !important;
+            box-shadow:0 2px 10px rgba(0,0,0,0.06) !important;
+            transition:transform 0.25s ease, box-shadow 0.25s ease !important;
+        }
+        .prod-card:active { transform:scale(0.96) !important; }
+        .prod-card::before { background:linear-gradient(90deg,#2563EB,#06B6D4) !important; height:2px !important; }
+        .plat-tag { background:#EFF6FF !important; color:#2563EB !important; border:1px solid #BFDBFE !important; font-weight:600 !important; }
+        .prod-name { color:#1E293B !important; }
+        .new-price { color:#059669 !important; font-weight:800 !important; }
+        .old-price { color:#94A3B8 !important; }
+        .view-btn {
+            background:linear-gradient(90deg,#2563EB,#3B82F6) !important;
+            color:#FFFFFF !important;
+            box-shadow:0 3px 10px rgba(37,99,235,0.22) !important;
+            border-radius:10px !important;
+            padding:8px !important;
+        }
+        .discount-badge { background:linear-gradient(135deg,#EF4444,#F87171) !important; }
+        .cart-fab { background:#F8FAFC !important; border-color:#E2E8F0 !important; color:#2563EB !important; }
+        .cart-fab.added { background:#10B981 !important; border-color:#10B981 !important; color:#fff !important; }
+        .prod-body { padding:9px !important; }
+
+        /* STATS BAR */
+        .stats-bar {
+            background:#FFFFFF !important;
+            border:1.5px solid #E8ECF4 !important;
+            box-shadow:0 2px 8px rgba(0,0,0,0.04) !important;
+            border-radius:14px !important;
+            margin:8px 14px 10px !important;
+        }
+        .stat-item { border-right-color:#E2E8F0 !important; padding:10px 6px !important; }
+        .stat-num { color:#2563EB !important; font-size:1rem !important; }
+        .stat-lbl { color:#64748B !important; font-size:0.58rem !important; }
+
+        /* BANNER */
+        .banner-outer { border-color:#E2E8F0 !important; box-shadow:0 4px 16px rgba(0,0,0,0.07) !important; border-radius:16px !important; margin:4px 14px 0 !important; }
+        .banner-dots { background:#F8FAFC !important; padding:8px !important; }
+        .banner-dot { background:#CBD5E1 !important; }
+        .banner-dot.active { background:#2563EB !important; }
+        .banner-nav { background:rgba(255,255,255,0.96) !important; border-color:#E2E8F0 !important; color:#2563EB !important; }
+        .banner-cta { background:linear-gradient(135deg,#2563EB,#3B82F6) !important; color:#fff !important; box-shadow:0 3px 10px rgba(37,99,235,0.3) !important; }
+        .banner-new-price { color:#059669 !important; }
+        .banner-plat { background:#EFF6FF !important; color:#2563EB !important; border-color:#BFDBFE !important; }
+        .banner-slide img { height:185px !important; object-fit:cover !important; }
+
+        /* BOTTOM NAV */
+        .bottom-nav { background:#FFFFFF !important; border-top:1.5px solid #E2E8F0 !important; box-shadow:0 -4px 18px rgba(0,0,0,0.06) !important; }
+        .nav-item { color:#94A3B8 !important; }
+        .nav-item::before { background:linear-gradient(90deg,#2563EB,#06B6D4) !important; height:2.5px !important; }
+        .nav-item.active { color:#2563EB !important; }
+
+        /* FAB */
+        .add-fab { background:linear-gradient(135deg,#2563EB,#3B82F6) !important; color:#fff !important; box-shadow:0 4px 18px rgba(37,99,235,0.4) !important; }
+
+        /* MODALS */
+        .modal { background:rgba(15,23,42,0.5) !important; backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+        .modal-content { background:#FFFFFF !important; border:1.5px solid #E2E8F0 !important; box-shadow:0 20px 60px rgba(0,0,0,0.12) !important; border-radius:22px !important; }
+        .modal-title { color:#1E293B !important; }
+        .modal-close { background:#FEF2F2 !important; border-color:rgba(239,68,68,0.3) !important; color:#EF4444 !important; }
+        .inp-grp label { color:#374151 !important; font-weight:600 !important; }
+        .inp-grp input,.inp-grp select,.inp-grp textarea { background:#F8FAFC !important; border-color:#E2E8F0 !important; color:#1E293B !important; }
+        .inp-grp input:focus,.inp-grp select:focus,.inp-grp textarea:focus { border-color:#2563EB !important; }
+        .inp-grp select option { background:#fff; color:#1E293B; }
+        .btn-gold { background:linear-gradient(90deg,#2563EB,#3B82F6) !important; color:#fff !important; box-shadow:0 4px 14px rgba(37,99,235,0.28) !important; border-radius:12px !important; }
+        .btn-orange { background:linear-gradient(90deg,#EA580C,#F97316) !important; box-shadow:0 4px 14px rgba(234,88,12,0.25) !important; }
+        .btn-edit { background:#EFF6FF !important; border-color:#BFDBFE !important; color:#2563EB !important; }
+        .btn-del { background:#FEF2F2 !important; border-color:rgba(239,68,68,0.3) !important; color:#EF4444 !important; }
+
+        /* PLATFORM PAGE */
+        .top-plat-header h2 { color:#1E293B !important; }
+        .top-plat-header p { color:#64748B !important; }
+        .plat-card-bg { display:none !important; }
+        .plat-verified { display:none !important; }
+        #top-platform-grid { gap:14px !important; padding:10px 14px 24px !important; }
+
+        /* COLLECTIONS */
+        .collection-card { background:#FFFFFF !important; border:1.5px solid #E8ECF4 !important; box-shadow:0 2px 8px rgba(0,0,0,0.04) !important; }
+        .col-title { color:#1E293B !important; }
+        .mini-card { background:#FFFFFF !important; border:1.5px solid #E8ECF4 !important; }
+        .mini-name { color:#1E293B !important; }
+        .mini-price { color:#059669 !important; font-weight:700 !important; }
+
+        /* CART */
+        .cart-row { background:#F8FAFC !important; border-color:#E8ECF4 !important; }
+        .cart-name { color:#1E293B !important; }
+        .cart-price { color:#059669 !important; }
+        .cart-badge { background:linear-gradient(135deg,#EF4444,#F87171) !important; border-color:#fff !important; }
+
+        /* PRODUCT VIEW */
+        .carousel-container { background:#F8FAFC !important; border:1.5px solid #E2E8F0 !important; border-radius:14px !important; }
+        #pv-name { color:#1E293B !important; }
+        #pv-new { color:#059669 !important; font-weight:800 !important; }
+        #pv-old { color:#94A3B8 !important; }
+
+        /* NO DATA */
+        .no-data { color:#94A3B8 !important; }
+        .no-data i { color:#2563EB !important; opacity:0.5 !important; }
+
+        /* PAGE TRANSITION */
+        .page-section { display:none; }
+        .active-page { display:block; animation:fadeUp 0.3s ease both; }
+
+        /* MISC */
+        .clear-btn { color:#EF4444 !important; border-color:rgba(239,68,68,0.3) !important; background:#FEF2F2 !important; }
+        .banner-chip { background:#EFF6FF !important; border-color:#BFDBFE !important; color:#1E293B !important; }
+        .banner-chip.selected { background:#2563EB !important; color:#fff !important; border-color:#2563EB !important; }
+        ::-webkit-scrollbar { width:4px; }
+        ::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:4px; }
+        ::selection { background:rgba(37,99,235,0.18); }
+
+        /* SHARE / COPY BUTTONS */
+        .share-btn {
+            display:flex; align-items:center; justify-content:center; gap:6px; flex:1;
+            padding:9px 10px; border-radius:11px; font-size:0.76rem; font-weight:600;
+            cursor:pointer; transition:all 0.2s; font-family:'DM Sans',sans-serif; border:1.5px solid;
+        }
+        .share-btn:active { transform:scale(0.95); }
+
+        /* LINK COPY TOAST */
+        .link-toast {
+            position:fixed; bottom:95px; left:50%; transform:translateX(-50%);
+            background:#1E293B; color:#fff; padding:10px 22px;
+            border-radius:25px; font-size:0.8rem; font-weight:600;
+            z-index:9999; opacity:0; pointer-events:none;
+            transition:opacity 0.3s, transform 0.3s; white-space:nowrap;
+            box-shadow:0 4px 18px rgba(0,0,0,0.2);
+        }
+        .link-toast.show { opacity:1; transform:translateX(-50%) translateY(-5px); }
+
+        /* PERFORMANCE */
+        img { content-visibility:auto; }
+        .prod-card { contain:layout style; }
+
     </style>
 </head>
 <body>
@@ -950,6 +1152,7 @@
             </div>
         </div>
         <div class="header-right">
+            <div id="header-contact-icons"></div>
             <div class="cart-icon-wrap" onclick="window.openCartModal()">
                 <div class="cart-wrap-inner"><i class="fas fa-shopping-bag"></i></div>
                 <div id="cart-badge" class="cart-badge" style="display:none;">0</div>
@@ -986,8 +1189,13 @@
         <!-- PAGE 1: TOP PLATFORMS -->
         <section id="platform-page" class="page-section active-page">
             <div class="top-plat-header">
-                <h2>✦ Top Platforms ✦</h2>
+                <h2>🛍️ Top Platforms</h2>
                 <p>India's most trusted shopping destinations</p>
+            </div>
+            <div class="plat-page-tags">
+                <span class="plat-page-tag">🔥 Best Deals</span>
+                <span class="plat-page-tag">✅ Verified</span>
+                <span class="plat-page-tag">⚡ Instant Access</span>
             </div>
             <div id="top-platform-grid"></div>
         </section>
@@ -995,9 +1203,17 @@
         <!-- PAGE 2: HOME -->
         <section id="home-page" class="page-section">
 
+            <!-- Search (TOP) -->
+            <div class="search-wrap">
+                <div class="search-inner">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search products..." oninput="window.handleSearch()">
+                </div>
+            </div>
+
             <!-- Featured Banner -->
-            <div style="padding:14px 0 4px;">
-                <div class="sec-title">
+            <div style="padding:0 0 6px;">
+                <div class="sec-title" style="padding-top:8px;">
                     <div class="sec-title-left">
                         <div class="sec-title-bar"></div>
                         <span class="sec-title-text">Featured Deals</span>
@@ -1010,7 +1226,7 @@
                 <div id="featured-banner-area"></div>
             </div>
 
-            <!-- Stats Bar -->
+            <!-- Stats Bar (compact) -->
             <div class="stats-bar" id="statsBar">
                 <div class="stat-item">
                     <div class="stat-num" id="statProds">0+</div>
@@ -1030,44 +1246,16 @@
                 </div>
             </div>
 
-            <!-- Search -->
-            <div class="search-wrap">
-                <div class="search-inner">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search premium products..." oninput="window.handleSearch()">
-                </div>
-            </div>
-
-            <!-- Trust Badges -->
-            <div class="trust-section">
-                <div class="trust-item">
-                    <div class="trust-icon gold"><i class="fas fa-shield-alt"></i></div>
-                    <div class="trust-text"><h4>Secure Deals</h4><p>100% verified links</p></div>
-                </div>
-                <div class="trust-item">
-                    <div class="trust-icon green"><i class="fas fa-tag"></i></div>
-                    <div class="trust-text"><h4>Best Price</h4><p>Lowest guaranteed</p></div>
-                </div>
-                <div class="trust-item">
-                    <div class="trust-icon sky"><i class="fas fa-bolt"></i></div>
-                    <div class="trust-text"><h4>Fast Access</h4><p>Instant buy links</p></div>
-                </div>
-                <div class="trust-item">
-                    <div class="trust-icon red"><i class="fas fa-heart"></i></div>
-                    <div class="trust-text"><h4>Top Picks</h4><p>Curated for you</p></div>
-                </div>
-            </div>
-
-            <!-- Contact -->
-            <div class="contact-area" id="contact-area"></div>
-            <div id="contact-edit-btn" style="text-align:center; display:none; margin-bottom:15px;">
+            <!-- hidden contact-area (still rendered for logic, hidden visually) -->
+            <div class="contact-area" id="contact-area" style="display:none;"></div>
+            <div id="contact-edit-btn" style="text-align:center; display:none; margin-bottom:10px;">
                 <button class="btn-edit" style="width:auto; padding:8px 18px;" onclick="window.openEditContactModal()">
                     <i class="fas fa-edit"></i> Edit Contact
                 </button>
             </div>
 
             <!-- Platform filter -->
-            <div class="sec-title">
+            <div class="sec-title" style="padding-top:10px;">
                 <div class="sec-title-left"><div class="sec-title-bar"></div><span class="sec-title-text">Platforms</span></div>
             </div>
             <div class="h-scroll" id="platform-list"></div>
@@ -1181,12 +1369,20 @@
                     <span style="font-size:0.65rem; background:rgba(79,195,247,0.1); color:var(--sky); border:1px solid rgba(79,195,247,0.2); padding:3px 9px; border-radius:20px;"><i class="fas fa-bolt"></i> Instant Access</span>
                 </div>
             </div>
-            <div style="display:flex; gap:10px;">
-                <a id="pv-buy-btn" href="#" target="_blank" class="btn-gold" style="text-decoration:none; display:block; text-align:center; flex:2; padding:12px; border-radius:12px; font-weight:800; letter-spacing:0.5px; font-size:0.9rem; color:var(--navy-deep);">
-                    Buy Now &nbsp;<i class="fas fa-external-link-alt"></i>
+            <div style="display:flex; gap:10px; margin-bottom:9px;">
+                <a id="pv-buy-btn" href="#" target="_blank" class="btn-gold" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:7px; text-align:center; flex:2; padding:13px; border-radius:12px; font-weight:800; font-size:0.9rem; color:#fff;">
+                    <i class="fas fa-shopping-bag"></i> Buy Now
                 </a>
-                <button id="pv-cart-btn" onclick="" style="flex:1; padding:12px; border-radius:12px; background:linear-gradient(135deg,var(--emerald-dark),var(--emerald)); border:none; color:white; font-size:1rem; cursor:pointer; transition:0.3s;">
+                <button id="pv-cart-btn" onclick="" style="flex:1; padding:12px; border-radius:12px; background:linear-gradient(135deg,#059669,#10B981); border:none; color:white; font-size:1.1rem; cursor:pointer; transition:0.3s; box-shadow:0 3px 12px rgba(5,150,105,0.28);">
                     <i class="fas fa-cart-plus"></i>
+                </button>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="share-btn" onclick="window.shareProductLink()" style="background:#EFF6FF; border-color:#BFDBFE; color:#2563EB;">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+                <button class="share-btn" onclick="window.copyProductLink()" style="background:#F0FDF4; border-color:#A7F3D0; color:#059669;">
+                    <i class="fas fa-link"></i> Copy Link
                 </button>
             </div>
             <div id="pv-video" class="video-wrap" style="display:none;"></div>
@@ -1203,6 +1399,8 @@
             <button class="btn-gold" onclick="window.saveBannerSelection()" style="margin-top:15px;">✅ Save Banner</button>
         </div>
     </div>
+
+    <div class="link-toast" id="linkToast">✅ Link Copied!</div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1298,7 +1496,46 @@
             renderTopPlatformsPage();
             updateCartBadge();
             updateStats();
+            checkUrlForProduct();
         }
+
+        // ===== PRODUCT PERSONAL LINK =====
+        let _urlChecked=false, _curProdId=null;
+        function checkUrlForProduct(){
+            if(_urlChecked) return;
+            const hash=window.location.hash;
+            if(!hash.startsWith('#product-')) return;
+            const id=parseInt(hash.replace('#product-',''));
+            if(!id) return;
+            let src='products';
+            let p=localDB.products.find(x=>x.id===id);
+            if(!p){p=localDB.topCatProducts.find(x=>x.id===id);if(p)src='topCatProducts';}
+            if(p){
+                _urlChecked=true;
+                const nav=document.querySelectorAll('.nav-item')[1];
+                if(nav) window.switchPage('home-page',nav);
+                setTimeout(()=>window.openProductView(id,src),220);
+            }
+        }
+        window.shareProductLink=function(){
+            if(!_curProdId) return;
+            const url=location.origin+location.pathname+'#product-'+_curProdId;
+            const name=document.getElementById('pv-name').textContent;
+            if(navigator.share) navigator.share({title:name,url}).catch(()=>window.doCopy(url));
+            else window.doCopy(url);
+        }
+        window.copyProductLink=function(){
+            if(!_curProdId) return;
+            window.doCopy(location.origin+location.pathname+'#product-'+_curProdId);
+        }
+        window.doCopy=function(text){
+            const show=()=>{const t=document.getElementById('linkToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);};
+            navigator.clipboard ? navigator.clipboard.writeText(text).then(show).catch(()=>{const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);show();}) : (()=>{const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);show();})();
+        }
+        window.addEventListener('popstate',()=>{
+            const m=document.getElementById('viewProductModal');
+            if(m&&m.style.display==='flex'){m.style.display='none';_curProdId=null;}
+        });
 
         function updateStats() {
             const sp = document.getElementById('statProds');
@@ -1375,13 +1612,21 @@
         // ===== RENDER CONTACT =====
         function renderContact() {
             const c=localDB.contact||{};
+            // Old contact area (hidden)
             const area=document.getElementById('contact-area');
+            if(area) area.innerHTML='';
+
+            // Header contact icons
+            const hdr=document.getElementById('header-contact-icons');
+            if(!hdr) return;
             let h='';
-            if(c.insta) h+=`<a href="${c.insta}" target="_blank" class="contact-link" style="background:rgba(225,48,108,0.15); border:1px solid rgba(225,48,108,0.3); color:#E1306C;"><i class="fab fa-instagram"></i></a>`;
-            if(c.wa) h+=`<a href="https://wa.me/${c.wa}" target="_blank" class="contact-link" style="background:rgba(37,211,102,0.15); border:1px solid rgba(37,211,102,0.3); color:#25D267;"><i class="fab fa-whatsapp"></i></a>`;
-            if(c.phone) h+=`<a href="tel:${c.phone}" class="contact-link" style="background:rgba(79,195,247,0.15); border:1px solid rgba(79,195,247,0.3); color:var(--sky);"><i class="fas fa-phone"></i></a>`;
-            if(!h) h='<span style="color:var(--text-muted);font-size:0.8rem;">Contact not set</span>';
-            area.innerHTML=h;
+            if(c.insta) h+=`<a href="${c.insta}" target="_blank" class="hdr-contact-btn" style="color:#E1306C; background:rgba(225,48,108,0.1); border:1px solid rgba(225,48,108,0.25);"><i class="fab fa-instagram"></i></a>`;
+            if(c.wa)   h+=`<a href="https://wa.me/${c.wa}" target="_blank" class="hdr-contact-btn" style="color:#25D267; background:rgba(37,211,102,0.1); border:1px solid rgba(37,211,102,0.25);"><i class="fab fa-whatsapp"></i></a>`;
+            if(c.phone) h+=`<a href="tel:${c.phone}" class="hdr-contact-btn" style="color:#0EA5E9; background:rgba(14,165,233,0.1); border:1px solid rgba(14,165,233,0.25);"><i class="fas fa-phone"></i></a>`;
+            hdr.innerHTML=h;
+            hdr.style.display = h ? 'flex' : 'none';
+            hdr.style.gap = '7px';
+            hdr.style.alignItems = 'center';
         }
 
         // ===== FILTERS =====
@@ -1444,26 +1689,23 @@
         function renderTopPlatformsPage() {
             const grid=document.getElementById('top-platform-grid');
             if(!localDB.topPlatforms.length){
-                grid.innerHTML=`<div class="no-data" style="grid-column:span 2;"><i class="fas fa-store"></i>No platforms added yet.${isAdmin?`<br><button onclick="window.openAddModal('topPlatform')" style="margin-top:12px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border:none; color:var(--navy-deep); padding:8px 20px; border-radius:20px; font-weight:800; cursor:pointer; font-size:0.8rem;">+ Add Platform</button>`:''}</div>`;
+                grid.innerHTML=`<div class="no-data" style="grid-column:span 2;padding:50px 20px;"><i class="fas fa-store" style="font-size:3rem;opacity:0.3;display:block;margin-bottom:14px;color:#2563EB;"></i><b style="color:#1E293B;">No platforms added yet</b><br><span style="font-size:0.8rem;color:#94A3B8;">Admin se platforms add karwayein</span>${isAdmin?`<br><button onclick="window.openAddModal('topPlatform')" style="margin-top:16px;background:linear-gradient(90deg,#2563EB,#3B82F6);border:none;color:#fff;padding:10px 24px;border-radius:12px;font-weight:700;cursor:pointer;font-size:0.85rem;box-shadow:0 4px 14px rgba(37,99,235,0.3);">+ Add Platform</button>`:''}</div>`;
                 return;
             }
-            grid.innerHTML=localDB.topPlatforms.map((p,i)=>`
-                <div class="plat-card" style="animation-delay:${i*0.08}s" onclick="window.open('${p.link}','_blank')">
-                    <div class="plat-card-bg"></div>
+            grid.innerHTML=localDB.topPlatforms.map((p,i)=>{
+                return `<div class="plat-card" style="animation-delay:${i*0.07}s" onclick="window.open('${p.link}','_blank')">
                     <div class="plat-card-inner">
-                        <div class="sp sp1"></div>
-                        <div class="sp sp2"></div>
-                        <div class="sp sp3"></div>
-                        <div class="plat-glow"></div>
-                        <div class="plat-logo-wrap" style="animation-delay:${i%2===0?'0s':'1.2s'}">
+                        <div class="plat-logo-wrap">
                             <img src="${p.image}" loading="lazy" class="plat-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3081/3081559.png'">
-                            <div class="plat-verified"><i class="fas fa-check"></i></div>
                         </div>
                         <div class="plat-name">${p.name}</div>
-                        <button class="plat-shop-btn" onclick="event.stopPropagation(); window.open('${p.link}','_blank')">Shop Now ✦</button>
-                        ${isAdmin?`<div style="display:flex;gap:5px;z-index:10;position:relative;" onclick="event.stopPropagation()"><button class="btn-edit" onclick="window.openEditModal('topPlatform',${p.id},event)">✏️</button><button class="btn-del" onclick="window.deleteItem('topPlatforms',${p.id},event)">🗑</button></div>`:''}
+                        <button class="plat-shop-btn" onclick="event.stopPropagation(); window.open('${p.link}','_blank')">
+                            SHOP NOW ✦
+                        </button>
+                        ${isAdmin?`<div style="display:flex;gap:5px;z-index:10;position:relative;margin-top:6px;" onclick="event.stopPropagation()"><button class="btn-edit" onclick="window.openEditModal('topPlatform',${p.id},event)">✏️</button><button class="btn-del" onclick="window.deleteItem('topPlatforms',${p.id},event)">🗑</button></div>`:''}
                     </div>
-                </div>`).join('');
+                </div>`;
+            }).join('');
         }
 
         // ===== TOP CATEGORIES PAGE =====
@@ -1544,6 +1786,8 @@
             if(src==='products') p=localDB.products.find(x=>x.id===id);
             else if(src==='topCatProducts') p=localDB.topCatProducts.find(x=>x.id===id);
             if(!p) return;
+            _curProdId=id;
+            history.replaceState(null,'','#product-'+id);
             document.getElementById('pv-name').textContent=p.name;
             document.getElementById('pv-platform').textContent=p.platform;
             document.getElementById('pv-new').textContent='₹'+p.newPrice;
@@ -1706,7 +1950,10 @@
             cont.innerHTML=h;
         }
 
-        window.closeModal=function(id){document.getElementById(id).style.display='none';}
+        window.closeModal=function(id){
+            if(id==='viewProductModal'){history.replaceState(null,'',location.pathname);_curProdId=null;}
+            document.getElementById(id).style.display='none';
+        }
     </script>
 </body>
 </html>
