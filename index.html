@@ -356,7 +356,11 @@
             position: relative;
             background: linear-gradient(135deg, #ffffff, #f5f5f5);
             height: 148px;
+            overflow: visible;  /* allow cart-fab to show */
+        }
+        .prod-img-wrap > img {
             overflow: hidden;
+            border-radius: 0;
         }
         .prod-img {
             width: 100%;
@@ -382,19 +386,22 @@
         .cart-fab {
             position: absolute;
             top: 8px; right: 8px;
-            width: 32px; height: 32px;
+            width: 34px; height: 34px;
             border-radius: 50%;
-            background: rgba(5,13,26,0.85);
-            border: 1px solid rgba(212,168,67,0.3);
-            color: var(--gold);
-            display: flex; align-items:center; justify-content:center;
-            font-size: 0.75rem;
+            background: rgba(255,255,255,0.95);
+            border: 1.5px solid #E2E8F0;
+            color: #2563EB;
+            display: flex !important; align-items:center; justify-content:center;
+            font-size: 0.8rem;
             cursor: pointer;
-            transition: background 0.15s, border-color 0.15s;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: background 0.2s, transform 0.2s;
         }
+        .cart-fab:active { transform: scale(0.88); }
         .cart-fab.added {
-            background: var(--emerald);
-            border-color: var(--emerald);
+            background: #10B981;
+            border-color: #10B981;
             color: white;
         }
 
@@ -1023,7 +1030,7 @@
             padding:8px !important;
         }
         .discount-badge { background:linear-gradient(135deg,#EF4444,#F87171) !important; }
-        .cart-fab { background:#F8FAFC !important; border-color:#E2E8F0 !important; color:#2563EB !important; }
+        .cart-fab { background:rgba(255,255,255,0.95) !important; border-color:#E2E8F0 !important; color:#2563EB !important; z-index:10 !important; display:flex !important; }
         .cart-fab.added { background:#10B981 !important; border-color:#10B981 !important; color:#fff !important; }
         .prod-body { padding:9px !important; }
 
@@ -1512,9 +1519,14 @@
             if(!p){p=localDB.topCatProducts.find(x=>x.id===id);if(p)src='topCatProducts';}
             if(p){
                 _urlChecked=true;
+                // First: replace current URL with clean home state (no hash)
+                // This ensures pressing back goes to home, not to broken hash
+                history.replaceState({home:true}, '', location.pathname);
+                // Navigate to home page
                 const nav=document.querySelectorAll('.nav-item')[1];
                 if(nav) window.switchPage('home-page',nav);
-                setTimeout(()=>window.openProductView(id,src),220);
+                // Then push product state on top
+                setTimeout(()=>window.openProductView(id,src), 250);
             }
         }
         window.shareProductLink=function(){
@@ -1532,9 +1544,18 @@
             const show=()=>{const t=document.getElementById('linkToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);};
             navigator.clipboard ? navigator.clipboard.writeText(text).then(show).catch(()=>{const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);show();}) : (()=>{const a=document.createElement('textarea');a.value=text;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);show();})();
         }
-        window.addEventListener('popstate',()=>{
+        window.addEventListener('popstate', function(e){
             const m=document.getElementById('viewProductModal');
-            if(m&&m.style.display==='flex'){m.style.display='none';_curProdId=null;}
+            if(m && m.style.display==='flex'){
+                // Close the product modal
+                m.style.display='none';
+                _curProdId=null;
+                // If state is home, navigate to home page
+                const nav=document.querySelectorAll('.nav-item')[1];
+                if(nav && !window.location.hash){
+                    window.switchPage('home-page', nav);
+                }
+            }
         });
 
         function updateStats() {
@@ -1787,7 +1808,8 @@
             else if(src==='topCatProducts') p=localDB.topCatProducts.find(x=>x.id===id);
             if(!p) return;
             _curProdId=id;
-            history.replaceState(null,'','#product-'+id);
+            // pushState so back button works (goes back to previous state)
+            history.pushState({productId:id, src:src}, '', '#product-'+id);
             document.getElementById('pv-name').textContent=p.name;
             document.getElementById('pv-platform').textContent=p.platform;
             document.getElementById('pv-new').textContent='₹'+p.newPrice;
@@ -1951,7 +1973,14 @@
         }
 
         window.closeModal=function(id){
-            if(id==='viewProductModal'){history.replaceState(null,'',location.pathname);_curProdId=null;}
+            if(id==='viewProductModal'){
+                // Go back in history to clear the #product- hash
+                if(window.location.hash.startsWith('#product-')){
+                    history.back();
+                    return; // popstate will handle hiding the modal
+                }
+                _curProdId=null;
+            }
             document.getElementById(id).style.display='none';
         }
     </script>
